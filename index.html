@@ -859,6 +859,7 @@
     });
 
     var rowsEl = document.getElementById('tl-rows');
+    var cphDeparture = new Date(2027, 3, 4, 8, 5);
     var arrival = new Date(2027, 3, 4, 13, 15);
     var departure = new Date(2027, 3, 9, 12, 30);
 
@@ -870,6 +871,15 @@
     rowEl.appendChild(labelEl);
     var trackEl = document.createElement('div');
     trackEl.className = 'tl-row-track';
+
+    var cphBar = document.createElement('div');
+    cphBar.className = 'tl-bar tl-bg';
+    var cphLeft = tlPct(cphDeparture);
+    cphBar.style.left = cphLeft + '%';
+    cphBar.style.width = Math.max(tlPct(arrival) - cphLeft, 0.4) + '%';
+    cphBar.title = 'Volo CPH → Longyearbyen, partenza 08:05, arrivo 13:15';
+    trackEl.appendChild(cphBar);
+
     [
       { dt: arrival, txt: '✈ Arrivo ' + tlFmtTime(arrival), pos: 'start' },
       { dt: departure, txt: '✈ Partenza ' + tlFmtTime(departure), pos: 'end' }
@@ -1283,7 +1293,7 @@
 
   // ---- Countdown ----
   function renderCountdown() {
-    var target = new Date(2027, 3, 4, 13, 15);
+    var target = new Date(2027, 3, 4, 8, 5); // CPH → Svalbard departure, the actual "partenza"
     var daysEl = document.getElementById('cd-days');
     var hoursEl = document.getElementById('cd-hours');
     var minsEl = document.getElementById('cd-mins');
