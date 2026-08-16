@@ -1087,7 +1087,6 @@
     function pad(n) { return (n < 10 ? '0' : '') + n; }
 
     function setPhrase(prefix, word, suffix) {
-      var fullText = prefix + ' ' + word + suffix;
       phraseEl.innerHTML = '';
       phraseEl.appendChild(document.createTextNode(prefix + ' '));
       var span = document.createElement('span');
@@ -1110,8 +1109,8 @@
       talker.className = 'speaker-btn';
       talker.textContent = '🗣️';
       talker.setAttribute('aria-label', 'Leggi la frase ad alta voce');
-      talker.title = 'Legge la frase con la voce del dispositivo';
-      talker.addEventListener('click', function () { speakPhrase(fullText); });
+      talker.title = 'Legge la frase, poi la voce salvata dice "vicina"';
+      talker.addEventListener('click', function () { speakPhrase(prefix, playSelectedVoice); });
       phraseEl.appendChild(document.createTextNode(' '));
       phraseEl.appendChild(talker);
       phraseEl.appendChild(document.createTextNode(suffix));
@@ -1154,14 +1153,15 @@
     }
   }
 
-  function speakPhrase(text) {
-    if (!('speechSynthesis' in window)) return;
+  function speakPhrase(text, onEnd) {
+    if (!('speechSynthesis' in window)) { if (onEnd) onEnd(); return; }
     try {
       window.speechSynthesis.cancel();
       var utter = new SpeechSynthesisUtterance(text);
       utter.lang = 'it-IT';
+      if (onEnd) { utter.onend = onEnd; utter.onerror = onEnd; }
       window.speechSynthesis.speak(utter);
-    } catch (e) {}
+    } catch (e) { if (onEnd) onEnd(); }
   }
 
   function playSelectedVoice() {
