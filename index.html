@@ -124,7 +124,7 @@
     scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
   }
   .hero-img {
-    display: block; flex: 0 0 auto; height: 260px; width: auto; object-fit: cover;
+    display: block; flex: 0 0 auto; height: 260px; width: 300px; object-fit: cover;
     cursor: zoom-in; scroll-snap-align: start;
   }
   .lightbox-img { max-width: 92vw; max-height: 88vh; border-radius: 8px; box-shadow: var(--shadow); }
@@ -1341,6 +1341,12 @@
     return 'https://raw.githubusercontent.com/' + OWNER + '/' + REPO + '/' + BRANCH + '/' + path;
   }
 
+  var HERO_FOCUS = {
+    'assets/hero.jpg': '85% center',
+    'assets/hero2.jpg': '85% center',
+    'assets/hero3.jpg': 'center center'
+  };
+
   function renderHeroStrip() {
     var scrollEl = document.getElementById('hero-scroll');
     scrollEl.innerHTML = '';
@@ -1348,6 +1354,7 @@
       var img = document.createElement('img');
       img.className = 'hero-img';
       img.alt = 'Foto del gruppo';
+      img.style.objectPosition = HERO_FOCUS[path] || 'center center';
       img.src = rawUrl(path);
       img.addEventListener('click', function () {
         document.getElementById('lightbox-img').src = this.src;
