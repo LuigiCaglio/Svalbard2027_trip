@@ -9,15 +9,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f3f6f8;
+    --bg: #f7fbfd;
     --surface: #ffffff;
-    --surface-2: #eaf0f3;
+    --surface-2: #edf5f8;
     --text: #16232b;
     --text-muted: #5b7080;
-    --border: #d7e2e8;
+    --border: #dbeaf0;
     --accent: #c4622d;
     --accent-contrast: #fffaf5;
-    --ice: #4f7d97;
+    --ice: #3f93b8;
     --done: #2e7d6b;
     --done-contrast: #f3fbf8;
     --danger: #b3413a;
@@ -44,6 +44,10 @@
   html, body { margin: 0; padding: 0; }
   body {
     background: var(--bg);
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     color: var(--text);
     font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 16px;
@@ -174,6 +178,12 @@
   .btn-danger { color: var(--accent-contrast); background: var(--danger); }
   .btn-danger:hover { filter: brightness(1.08); }
   .voice-hint { font-size: 0.78rem; color: var(--text-muted); }
+
+  .bg-upload-row {
+    display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; width: 100%;
+    padding-top: 0.7rem; margin-top: 0.2rem; border-top: 1px dashed var(--border);
+  }
+  .bg-upload-row input[type="file"] { font-size: 0.75rem; max-width: 170px; color: var(--text-muted); }
   .voice-hint.ok { color: var(--done); }
   .voice-hint.error { color: var(--danger); }
 
@@ -402,6 +412,11 @@
       <button class="btn btn-accent" id="unlock-btn" type="button">Sblocca modifica</button>
     </span>
     <div class="status-line" id="status-line"></div>
+    <div class="bg-upload-row">
+      <input type="file" accept="image/*" id="bg-file-input">
+      <button class="btn btn-ghost" id="bg-upload-btn" type="button">Carica sfondo</button>
+      <span class="voice-hint" id="bg-status"></span>
+    </div>
   </div>
 
   <footer class="legend mono">
@@ -506,6 +521,8 @@
       authNoteEl.textContent = 'Solo visualizzazione. Sblocca la modifica per spuntare o aggiungere elementi.';
       unlockBtn.textContent = 'Sblocca modifica';
     }
+    document.getElementById('bg-file-input').disabled = !hasToken();
+    document.getElementById('bg-upload-btn').disabled = !hasToken();
   }
 
   // ---- parse CHECKLIST.md into sections/items, tracking exact line indices ----
@@ -1291,6 +1308,58 @@
   document.getElementById('dafare-add-btn').addEventListener('click', addDaFareItem);
   document.getElementById('dafare-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') addDaFareItem(); });
 
+  // ---- Background image ----
+  var BG_BASE_PATH = 'assets/background';
+
+  function bgExtFromType(type) {
+    if (type === 'image/png') return 'png';
+    if (type === 'image/webp') return 'webp';
+    if (type === 'image/gif') return 'gif';
+    return 'jpg';
+  }
+
+  function applyBackground(path) {
+    var url = 'https://raw.githubusercontent.com/' + OWNER + '/' + REPO + '/' + BRANCH + '/' + path;
+    document.body.style.backgroundImage = "url('" + url + "')";
+  }
+
+  async function loadBackground() {
+    try {
+      var meta = await ghGetRaw('background.json');
+      if (meta) {
+        var data = JSON.parse(b64DecodeUnicode(meta.content.replace(/\n/g, '')));
+        if (data.path) applyBackground(data.path);
+      }
+    } catch (e) {}
+  }
+
+  async function uploadBackground() {
+    var fileInput = document.getElementById('bg-file-input');
+    var statusEl4 = document.getElementById('bg-status');
+    var file = fileInput.files[0];
+    if (!file || !hasToken()) return;
+    var path = BG_BASE_PATH + '.' + bgExtFromType(file.type);
+    statusEl4.textContent = 'Caricamento…';
+    statusEl4.className = 'voice-hint';
+    try {
+      var b64 = await blobToBase64(file);
+      var existing = await ghGetRaw(path);
+      await ghPutRaw(path, b64, 'Update background image', existing ? existing.sha : null);
+      var metaExisting = await ghGetRaw('background.json');
+      var metaB64 = b64EncodeUnicode(JSON.stringify({ path: path }, null, 2));
+      await ghPutRaw('background.json', metaB64, 'Update background meta', metaExisting ? metaExisting.sha : null);
+      applyBackground(path);
+      statusEl4.textContent = 'Sfondo aggiornato';
+      statusEl4.className = 'voice-hint ok';
+      setTimeout(function () { if (statusEl4.textContent === 'Sfondo aggiornato') statusEl4.textContent = ''; }, 2200);
+    } catch (err) {
+      statusEl4.textContent = 'Impossibile caricare: ' + err.message;
+      statusEl4.className = 'voice-hint error';
+    }
+  }
+
+  document.getElementById('bg-upload-btn').addEventListener('click', uploadBackground);
+
   // ---- Countdown ----
   function renderCountdown() {
     var target = new Date(2027, 3, 4, 8, 5); // CPH → Svalbard departure, the actual "partenza"
@@ -1586,6 +1655,7 @@
   alloggiModule.load();
   prenotatoModule.load();
   escursioniModule.load();
+  loadBackground();
 })();
 </script>
 </body>
