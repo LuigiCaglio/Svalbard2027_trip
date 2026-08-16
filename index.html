@@ -117,11 +117,15 @@
     font-size: clamp(1.9rem, 7vw, 2.6rem); letter-spacing: -0.01em; text-wrap: balance;
   }
 
-  /* ---- Hero photo ---- */
+  /* ---- Hero photo strip ---- */
   .hero-wrap { margin: 0 0 1.1rem; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
+  .hero-scroll {
+    display: flex; gap: 2px; overflow-x: auto; background: var(--border);
+    scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
+  }
   .hero-img {
-    display: block; width: 100%; max-height: 320px; object-fit: cover; object-position: center 35%;
-    cursor: zoom-in;
+    display: block; flex: 0 0 auto; height: 260px; width: auto; object-fit: cover;
+    cursor: zoom-in; scroll-snap-align: start;
   }
   .lightbox-img { max-width: 92vw; max-height: 88vh; border-radius: 8px; box-shadow: var(--shadow); }
 
@@ -306,7 +310,7 @@
   <h1 class="page-title">Viaggio Svalbard<br>Aprile 2027</h1>
 
   <div class="hero-wrap" id="hero-wrap" style="display:none;">
-    <img id="hero-img" class="hero-img" alt="Foto del gruppo">
+    <div class="hero-scroll" id="hero-scroll"></div>
   </div>
 
   <div class="cd-card" id="cd-card">
@@ -1330,21 +1334,46 @@
     return 'jpg';
   }
 
-  function applyHero(path) {
-    var url = 'https://raw.githubusercontent.com/' + OWNER + '/' + REPO + '/' + BRANCH + '/' + path;
-    var img = document.getElementById('hero-img');
-    img.src = url;
-    document.getElementById('hero-wrap').style.display = 'block';
+  var heroPaths = [];
+  var heroMetaSha = null;
+
+  function rawUrl(path) {
+    return 'https://raw.githubusercontent.com/' + OWNER + '/' + REPO + '/' + BRANCH + '/' + path;
+  }
+
+  function renderHeroStrip() {
+    var scrollEl = document.getElementById('hero-scroll');
+    scrollEl.innerHTML = '';
+    heroPaths.forEach(function (path) {
+      var img = document.createElement('img');
+      img.className = 'hero-img';
+      img.alt = 'Foto del gruppo';
+      img.src = rawUrl(path);
+      img.addEventListener('click', function () {
+        document.getElementById('lightbox-img').src = this.src;
+        document.getElementById('lightbox-backdrop').style.display = 'flex';
+      });
+      scrollEl.appendChild(img);
+    });
+    document.getElementById('hero-wrap').style.display = heroPaths.length ? 'block' : 'none';
   }
 
   async function loadHero() {
     try {
       var meta = await ghGetRaw('hero.json');
       if (meta) {
+        heroMetaSha = meta.sha;
         var data = JSON.parse(b64DecodeUnicode(meta.content.replace(/\n/g, '')));
-        if (data.path) applyHero(data.path);
+        heroPaths = data.paths || (data.path ? [data.path] : []);
+      } else {
+        heroMetaSha = null;
+        heroPaths = [];
       }
-    } catch (e) {}
+    } catch (e) {
+      heroMetaSha = null;
+      heroPaths = [];
+    }
+    renderHeroStrip();
   }
 
   async function uploadHero() {
@@ -1352,20 +1381,22 @@
     var statusEl4 = document.getElementById('hero-status');
     var file = fileInput.files[0];
     if (!file || !hasToken()) return;
-    var path = HERO_BASE_PATH + '.' + heroExtFromType(file.type);
+    var path = HERO_BASE_PATH + '-' + Date.now() + '.' + heroExtFromType(file.type);
     statusEl4.textContent = 'Caricamento…';
     statusEl4.className = 'voice-hint';
     try {
       var b64 = await blobToBase64(file);
-      var existing = await ghGetRaw(path);
-      await ghPutRaw(path, b64, 'Update hero photo', existing ? existing.sha : null);
-      var metaExisting = await ghGetRaw('hero.json');
-      var metaB64 = b64EncodeUnicode(JSON.stringify({ path: path }, null, 2));
-      await ghPutRaw('hero.json', metaB64, 'Update hero meta', metaExisting ? metaExisting.sha : null);
-      applyHero(path);
-      statusEl4.textContent = 'Foto aggiornata';
+      await ghPutRaw(path, b64, 'Add hero photo', null);
+      var newPaths = heroPaths.concat([path]);
+      var metaB64 = b64EncodeUnicode(JSON.stringify({ paths: newPaths }, null, 2));
+      var metaRes = await ghPutRaw('hero.json', metaB64, 'Add hero photo to strip', heroMetaSha);
+      heroMetaSha = metaRes.content.sha;
+      heroPaths = newPaths;
+      renderHeroStrip();
+      fileInput.value = '';
+      statusEl4.textContent = 'Foto aggiunta';
       statusEl4.className = 'voice-hint ok';
-      setTimeout(function () { if (statusEl4.textContent === 'Foto aggiornata') statusEl4.textContent = ''; }, 2200);
+      setTimeout(function () { if (statusEl4.textContent === 'Foto aggiunta') statusEl4.textContent = ''; }, 2200);
     } catch (err) {
       statusEl4.textContent = 'Impossibile caricare: ' + err.message;
       statusEl4.className = 'voice-hint error';
@@ -1373,10 +1404,6 @@
   }
 
   document.getElementById('hero-upload-btn').addEventListener('click', uploadHero);
-  document.getElementById('hero-img').addEventListener('click', function () {
-    document.getElementById('lightbox-img').src = this.src;
-    document.getElementById('lightbox-backdrop').style.display = 'flex';
-  });
   document.getElementById('lightbox-backdrop').addEventListener('click', function () {
     this.style.display = 'none';
   });
