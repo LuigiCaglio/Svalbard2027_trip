@@ -775,10 +775,10 @@
       minsEl.textContent = pad(mins);
       secsEl.textContent = pad(secs);
       var phrase;
-      if (days > 60) phrase = 'non è molto';
-      else if (days > 14) phrase = 'è abbastanza';
-      else if (days > 2) phrase = 'è';
-      else phrase = 'è molto';
+      if (days < 30) phrase = 'è molto';
+      else if (days < 60) phrase = 'è';
+      else if (days < 120) phrase = 'è abbastanza';
+      else phrase = 'non è molto';
       phraseEl.textContent = 'La partenza ' + phrase + ' vicina.';
     }
     tick();
