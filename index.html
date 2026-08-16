@@ -181,6 +181,21 @@
   .lodging-list a { color: var(--ice); font-weight: 600; font-size: 0.95rem; }
   .lodging-note { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem; }
 
+  /* ---- Escursioni table ---- */
+  .table-scroll { overflow-x: auto; }
+  .escursioni-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .escursioni-table th, .escursioni-table td { padding: 0.55rem 0.75rem; text-align: left; border-top: 1px dashed var(--border); vertical-align: top; }
+  .escursioni-table thead th {
+    border-top: none; font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-muted); background: var(--surface-2); white-space: nowrap;
+  }
+  .escursioni-table td:first-child { min-width: 130px; }
+  .escursioni-table td:last-child { color: var(--text-muted); min-width: 150px; }
+  .trunc-link {
+    display: inline-block; max-width: 110px; overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap; vertical-align: bottom; color: var(--ice);
+  }
+
   section.card { border: 1px solid var(--border); background: var(--surface); border-radius: 8px; box-shadow: var(--shadow); margin-bottom: 1.1rem; overflow: hidden; }
   .card-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.9rem 1.25rem; background: var(--surface-2); border-bottom: 1px solid var(--border); }
   .card-head h2 { margin: 0; font-size: 1.05rem; letter-spacing: -0.005em; }
@@ -302,6 +317,74 @@
       <li><a href="https://www.radissonhotels.com/en-us/hotels/radisson-blu-spitsbergen-polar" target="_blank" rel="noopener">Radisson Blu Polar Hotel, Spitsbergen</a><span class="lodging-note">Full-service, 3 min a piedi dal centro, sauna</span></li>
       <li><a href="https://hurtigrutensvalbard.com/en/hotels-and-accommodation/coal-miners-cabins" target="_blank" rel="noopener">Coal Miners&rsquo; Cabins</a><span class="lodging-note">Nybyen, opzione più economica, ~20 min a piedi dal centro</span></li>
     </ul>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <div><h2>Prenotato</h2></div>
+    </div>
+    <ul class="lodging-list">
+      <li><a href="https://www.wildlife.no/en/product-page/snowmobile-safari-to-east-coast-one-night" target="_blank" rel="noopener">Spedizione Costa Est (1 notte, motoslitta)</a><span class="lodging-note">5&ndash;6 apr, ritiro 17:00</span></li>
+      <li><a href="https://www.wildlife.no/en/product-page/ice-cave-hike-frozen-world" target="_blank" rel="noopener">Grotta di ghiaccio &ndash; Frozen World</a><span class="lodging-note">7 apr, 09:30&ndash;15:00</span></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <div><h2>Possibili escursioni</h2></div>
+    </div>
+    <div class="table-scroll">
+      <table class="escursioni-table">
+        <thead><tr><th>Nome</th><th>Link</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Spedizione Costa Est</td>
+            <td><a class="trunc-link" href="https://www.wildlife.no/en/product-page/snowmobile-safari-to-east-coast-one-night" target="_blank" rel="noopener">https://www.wildlife.no/en/product-page/snowmobile-safari-to-east-coast-one-night</a></td>
+            <td>5&ndash;6 apr, 17:00&ndash;18:00 &mdash; prenotata</td>
+          </tr>
+          <tr>
+            <td>Grotta di ghiaccio &ndash; Frozen World</td>
+            <td><a class="trunc-link" href="https://www.wildlife.no/en/product-page/ice-cave-hike-frozen-world" target="_blank" rel="noopener">https://www.wildlife.no/en/product-page/ice-cave-hike-frozen-world</a></td>
+            <td>7 apr, 09:30&ndash;15:00 &mdash; prenotata</td>
+          </tr>
+          <tr>
+            <td>Miniera di carbone (Gruve 3)</td>
+            <td><a class="trunc-link" href="https://gruve3.no/mine-no-3" target="_blank" rel="noopener">https://gruve3.no/mine-no-3</a></td>
+            <td>5 apr, mattina &mdash; da prenotare</td>
+          </tr>
+          <tr>
+            <td>Isfjord Radio (2 giorni, motoslitta)</td>
+            <td><a class="trunc-link" href="https://en.visitsvalbard.com/things-to-do/arctic-luxury-snowmobile-adventure-to-isfjord-radio-basecamp-explorer-spitsbergen-p2522173" target="_blank" rel="noopener">https://en.visitsvalbard.com/things-to-do/arctic-luxury-snowmobile-adventure-to-isfjord-radio-basecamp-explorer-spitsbergen-p2522173</a></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Baita del trapper (Juva/Fredheim)</td>
+            <td><a class="trunc-link" href="https://hurtigrutensvalbard.com/en/expeditions/juva-cabin-snowmobile-expedition-svalbard" target="_blank" rel="noopener">https://hurtigrutensvalbard.com/en/expeditions/juva-cabin-snowmobile-expedition-svalbard</a></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Spedizione con cani da slitta (multi-day)</td>
+            <td><a class="trunc-link" href="https://en.visitsvalbard.com/things-to-do/three-day-expedition-with-dogsledge-green-dog-svalbard-p2522803" target="_blank" rel="noopener">https://en.visitsvalbard.com/things-to-do/three-day-expedition-with-dogsledge-green-dog-svalbard-p2522803</a></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Ski touring con pulk</td>
+            <td><a class="trunc-link" href="https://en.visitsvalbard.com/activity-planner/3-day-svalbard-ski-touring-camp-svalbard-wildlife-expeditions-p2523183" target="_blank" rel="noopener">https://en.visitsvalbard.com/activity-planner/3-day-svalbard-ski-touring-camp-svalbard-wildlife-expeditions-p2523183</a></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Spedizione Newtontoppen</td>
+            <td><a class="trunc-link" href="https://en.visitsvalbard.com/activity-planner/expedition-to-newtontoppen-svalbards-tallest-hurtigruten-svalbard-p5669963" target="_blank" rel="noopener">https://en.visitsvalbard.com/activity-planner/expedition-to-newtontoppen-svalbards-tallest-hurtigruten-svalbard-p5669963</a></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Grotta di ghiaccio overnight</td>
+            <td><a class="trunc-link" href="https://www.visitnorway.com/listings/ice-cave-overnight-adventure-svalbard-wildlife-expeditions/171547/" target="_blank" rel="noopener">https://www.visitnorway.com/listings/ice-cave-overnight-adventure-svalbard-wildlife-expeditions/171547/</a></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <div id="content"><div class="loading">Caricamento lista&hellip;</div></div>
