@@ -15,9 +15,13 @@ Vedi [CHECKLIST.md](CHECKLIST.md) per assicurazione / attrezzatura / telefono / 
 | 5 | 8 apr | Giorno libero — non ancora deciso |
 | 6 | 9 apr | Colazione, bagagli, riconsegna attrezzatura, partenza 12:30 |
 
-Stesso hotel a Longyearbyen prenotato per tutte le 5 notti.
+Stesso hotel a Longyearbyen previsto per tutte le 5 notti (non ancora prenotato).
 
-## Attività prenotate
+## Prenotato finora
+
+Solo il volo. Tutto il resto qui sotto è pianificato ma non ancora prenotato.
+
+## Attività pianificate (da prenotare)
 
 - Spedizione Costa Est, 1 notte (motoslitta) — [wildlife.no](https://www.wildlife.no/en/product-page/snowmobile-safari-to-east-coast-one-night) — ~€1.200 a testa
 - Grotta di ghiaccio – Frozen World — [wildlife.no](https://www.wildlife.no/en/product-page/ice-cave-hike-frozen-world) — ~€115 a testa
@@ -26,4 +30,5 @@ Stesso hotel a Longyearbyen prenotato per tutte le 5 notti.
 
 - Giorno 5 (8 apr): ancora da decidere — tra le opzioni: riposo, un'attività leggera in città, oppure tenerlo come margine per il maltempo.
 - Miniera di carbone: non ancora prenotata.
+- Hotel: non ancora prenotato.
 - Assicurazione / SIM / attrezzatura: vedi [CHECKLIST.md](CHECKLIST.md).

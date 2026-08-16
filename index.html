@@ -180,6 +180,7 @@
   .lodging-list li + li { border-top: 1px dashed var(--border); }
   .lodging-list a { color: var(--ice); font-weight: 600; font-size: 0.95rem; }
   .lodging-note { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem; }
+  .lodging-empty { color: var(--text-muted); font-size: 0.9rem; font-style: italic; }
 
   /* ---- Escursioni table ---- */
   .table-scroll { overflow-x: auto; }
@@ -323,9 +324,8 @@
     <div class="card-head">
       <div><h2>Prenotato</h2></div>
     </div>
-    <ul class="lodging-list">
-      <li><a href="https://www.wildlife.no/en/product-page/snowmobile-safari-to-east-coast-one-night" target="_blank" rel="noopener">Spedizione Costa Est (1 notte, motoslitta)</a><span class="lodging-note">5&ndash;6 apr, ritiro 17:00</span></li>
-      <li><a href="https://www.wildlife.no/en/product-page/ice-cave-hike-frozen-world" target="_blank" rel="noopener">Grotta di ghiaccio &ndash; Frozen World</a><span class="lodging-note">7 apr, 09:30&ndash;15:00</span></li>
+    <ul class="lodging-list" id="prenotato-list">
+      <li class="lodging-empty">Ancora nulla, solo il volo per ora.</li>
     </ul>
   </section>
 
@@ -340,12 +340,12 @@
           <tr>
             <td>Spedizione Costa Est</td>
             <td><a class="trunc-link" href="https://www.wildlife.no/en/product-page/snowmobile-safari-to-east-coast-one-night" target="_blank" rel="noopener">https://www.wildlife.no/en/product-page/snowmobile-safari-to-east-coast-one-night</a></td>
-            <td>5&ndash;6 apr, 17:00&ndash;18:00 &mdash; prenotata</td>
+            <td>5&ndash;6 apr, 17:00&ndash;18:00 &mdash; da prenotare</td>
           </tr>
           <tr>
             <td>Grotta di ghiaccio &ndash; Frozen World</td>
             <td><a class="trunc-link" href="https://www.wildlife.no/en/product-page/ice-cave-hike-frozen-world" target="_blank" rel="noopener">https://www.wildlife.no/en/product-page/ice-cave-hike-frozen-world</a></td>
-            <td>7 apr, 09:30&ndash;15:00 &mdash; prenotata</td>
+            <td>7 apr, 09:30&ndash;15:00 &mdash; da prenotare</td>
           </tr>
           <tr>
             <td>Miniera di carbone (Gruve 3)</td>
