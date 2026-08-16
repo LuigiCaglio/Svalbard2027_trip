@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Svalbard Manifest</title>
+<title>Manifesto Svalbard</title>
 <style>
   :root {
     --bg: #f3f6f8;
@@ -141,6 +141,26 @@
   .tl-point .tl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--surface); display: block; flex-shrink: 0; }
   .tl-flight-label { font-size: 0.72rem; color: var(--text); white-space: nowrap; font-family: ui-monospace, "JetBrains Mono", "SF Mono", Consolas, monospace; }
 
+  /* ---- Countdown ---- */
+  .cd-grid { display: flex; gap: 0.75rem; padding: 1.1rem 1.5rem; justify-content: center; flex-wrap: wrap; }
+  .cd-unit { display: flex; flex-direction: column; align-items: center; min-width: 62px; }
+  .cd-num { font-family: ui-monospace, "JetBrains Mono", "SF Mono", Consolas, monospace; font-size: 2rem; font-variant-numeric: tabular-nums; font-weight: 700; color: var(--text); }
+  .cd-label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.2rem; }
+  .cd-phrase { text-align: center; padding: 0 1.5rem 1.15rem; font-size: 0.95rem; color: var(--text-muted); font-style: italic; }
+
+  /* ---- Voices ---- */
+  .voice-slot { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.25rem; flex-wrap: wrap; }
+  .voice-slot + .voice-slot { border-top: 1px dashed var(--border); }
+  .voice-name-input {
+    font-family: inherit; font-size: 0.9rem; padding: 0.4rem 0.6rem;
+    border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); width: 130px;
+  }
+  .voice-controls { display: flex; align-items: center; gap: 0.55rem; flex: 1; flex-wrap: wrap; }
+  .voice-audio { height: 32px; max-width: 220px; }
+  .rec-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--danger); display: inline-block; margin-right: 0.35rem; animation: rec-pulse 1s infinite; }
+  @keyframes rec-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .voice-hint { font-size: 0.78rem; color: var(--text-muted); }
+
   section.card { border: 1px solid var(--border); background: var(--surface); border-radius: 8px; box-shadow: var(--shadow); margin-bottom: 1.1rem; overflow: hidden; }
   .card-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.9rem 1.25rem; background: var(--surface-2); border-bottom: 1px solid var(--border); }
   .card-head h2 { margin: 0; font-size: 1.05rem; letter-spacing: -0.005em; }
@@ -212,17 +232,17 @@
 
   <header class="top">
     <div class="top-band">
-      <div class="eyebrow mono"><span>SVALBARD &middot; APR 4&ndash;9, 2027</span><span id="doc-date"></span></div>
-      <h1>Trip Manifest</h1>
-      <p class="sub">Live from <code class="mono">CHECKLIST.md</code> on GitHub. Anyone with this link can view it &mdash; unlock editing to check items yourself.</p>
+      <div class="eyebrow mono"><span>SVALBARD &middot; 4&ndash;9 APR 2027</span><span id="doc-date"></span></div>
+      <h1>Piano del viaggio</h1>
+      <p class="sub">In diretta da <code class="mono">CHECKLIST.md</code> su GitHub. Chiunque abbia questo link può vederlo &mdash; sblocca la modifica per spuntare gli elementi.</p>
     </div>
-    <div class="tally-row mono"><span class="tally-num">PACKED <b id="overall-count">0/0</b></span><span class="tally-num" id="overall-pct">0%</span></div>
+    <div class="tally-row mono"><span class="tally-num">FATTO <b id="overall-count">0/0</b></span><span class="tally-num" id="overall-pct">0%</span></div>
     <div class="gauge"><div class="gauge-fill" id="overall-fill"></div></div>
     <div class="auth-row">
-      <span class="auth-note" id="auth-note">Viewing only. Unlock editing to check items or add new ones.</span>
+      <span class="auth-note" id="auth-note">Solo visualizzazione. Sblocca la modifica per spuntare o aggiungere elementi.</span>
       <span style="display:flex; gap:0.5rem;">
-        <button class="btn btn-ghost" id="refresh-btn" type="button">Refresh</button>
-        <button class="btn btn-accent" id="unlock-btn" type="button">Unlock editing</button>
+        <button class="btn btn-ghost" id="refresh-btn" type="button">Aggiorna</button>
+        <button class="btn btn-accent" id="unlock-btn" type="button">Sblocca modifica</button>
       </span>
     </div>
     <div class="status-line" id="status-line"></div>
@@ -230,8 +250,22 @@
 
   <section class="card">
     <div class="card-head">
-      <div><h2>Schedule</h2></div>
-      <div class="card-count mono">Apr 4&ndash;9</div>
+      <div><h2>Conto alla rovescia</h2></div>
+      <div class="card-count mono">4 apr 2027 &middot; 13:15</div>
+    </div>
+    <div class="cd-grid">
+      <div class="cd-unit"><span class="cd-num mono" id="cd-days">&ndash;</span><span class="cd-label">giorni</span></div>
+      <div class="cd-unit"><span class="cd-num mono" id="cd-hours">&ndash;</span><span class="cd-label">ore</span></div>
+      <div class="cd-unit"><span class="cd-num mono" id="cd-mins">&ndash;</span><span class="cd-label">minuti</span></div>
+      <div class="cd-unit"><span class="cd-num mono" id="cd-secs">&ndash;</span><span class="cd-label">secondi</span></div>
+    </div>
+    <p class="cd-phrase" id="cd-phrase"></p>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <div><h2>Programma</h2></div>
+      <div class="card-count mono">4&ndash;9 apr</div>
     </div>
     <div class="timeline-scroll">
       <div class="timeline" id="timeline">
@@ -244,27 +278,35 @@
     </div>
   </section>
 
-  <div id="content"><div class="loading">Loading checklist&hellip;</div></div>
+  <section class="card">
+    <div class="card-head">
+      <div><h2>Voci</h2></div>
+      <div class="card-count mono">max 3s ciascuna</div>
+    </div>
+    <div id="voice-slots"></div>
+  </section>
+
+  <div id="content"><div class="loading">Caricamento lista&hellip;</div></div>
 
   <footer class="legend mono">
-    <span>Longyearbyen, Svalbard</span>&middot;<span><a href="https://github.com/LuigiCaglio/Svalbard2027_trip" target="_blank" rel="noopener">source on GitHub</a></span>
+    <span>Longyearbyen, Svalbard</span>&middot;<span><a href="https://github.com/LuigiCaglio/Svalbard2027_trip" target="_blank" rel="noopener">codice sorgente su GitHub</a></span>
   </footer>
 </div>
 
 <div class="modal-backdrop" id="modal-backdrop" style="display:none;">
   <div class="modal">
-    <h3>Unlock editing</h3>
-    <p>Paste a GitHub token scoped to just this repo. It's saved only in this browser and used to save checklist changes directly to <code class="mono">CHECKLIST.md</code>.</p>
+    <h3>Sblocca modifica</h3>
+    <p>Incolla un token GitHub limitato a questo repository. Viene salvato solo in questo browser e usato per salvare le modifiche direttamente su <code class="mono">CHECKLIST.md</code>.</p>
     <ol>
       <li>github.com &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Fine-grained tokens &rarr; Generate new</li>
       <li>Repository access: <b>Only select repositories</b> &rarr; Svalbard2027_trip</li>
       <li>Permissions: <b>Contents &rarr; Read and write</b></li>
-      <li>Generate, copy the token, paste it below</li>
+      <li>Genera il token, copialo e incollalo qui sotto</li>
     </ol>
     <input type="password" id="token-input" placeholder="github_pat_..." autocomplete="off">
     <div class="modal-actions">
-      <button class="btn btn-ghost" id="modal-cancel" type="button">Cancel</button>
-      <button class="btn btn-accent" id="modal-save" type="button">Save</button>
+      <button class="btn btn-ghost" id="modal-cancel" type="button">Annulla</button>
+      <button class="btn btn-accent" id="modal-save" type="button">Salva</button>
     </div>
   </div>
 </div>
@@ -313,11 +355,11 @@
 
   function updateAuthUI() {
     if (hasToken()) {
-      authNoteEl.textContent = 'Editing unlocked in this browser.';
-      unlockBtn.textContent = 'Lock editing';
+      authNoteEl.textContent = 'Modifica sbloccata in questo browser.';
+      unlockBtn.textContent = 'Blocca modifica';
     } else {
-      authNoteEl.textContent = 'Viewing only. Unlock editing to check items or add new ones.';
-      unlockBtn.textContent = 'Unlock editing';
+      authNoteEl.textContent = 'Solo visualizzazione. Sblocca la modifica per spuntare o aggiungere elementi.';
+      unlockBtn.textContent = 'Sblocca modifica';
     }
   }
 
@@ -430,12 +472,12 @@
       addRow.className = 'add-row';
       var addInput = document.createElement('input');
       addInput.type = 'text';
-      addInput.placeholder = hasToken() ? 'Add an item to ' + section.title + '…' : 'Unlock editing to add items';
+      addInput.placeholder = hasToken() ? 'Aggiungi un elemento a ' + section.title + '…' : 'Sblocca la modifica per aggiungere elementi';
       addInput.disabled = !hasToken();
       var addBtn = document.createElement('button');
       addBtn.className = 'btn btn-ghost';
       addBtn.type = 'button';
-      addBtn.textContent = 'Add';
+      addBtn.textContent = 'Aggiungi';
       addBtn.disabled = !hasToken();
       addBtn.addEventListener('click', function () { addItem(section, addInput); });
       addInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') addItem(section, addInput); });
@@ -454,7 +496,7 @@
 
   // ---- GitHub read/write ----
   async function load(showSpinner) {
-    if (showSpinner) contentEl.innerHTML = '<div class="loading">Loading checklist&hellip;</div>';
+    if (showSpinner) contentEl.innerHTML = '<div class="loading">Caricamento lista&hellip;</div>';
     try {
       var res = await fetch('https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/' + PATH + '?ref=' + BRANCH, {
         headers: apiHeaders()
@@ -467,7 +509,7 @@
       render();
       setStatus('');
     } catch (err) {
-      contentEl.innerHTML = '<div class="load-error">Could not load the checklist (' + err.message + '). Try Refresh.</div>';
+      contentEl.innerHTML = '<div class="load-error">Impossibile caricare la lista (' + err.message + '). Prova ad aggiornare.</div>';
     }
   }
 
@@ -500,22 +542,22 @@
     newLines[item.lineIndex] = newLines[item.lineIndex].replace(/^-\s\[[ xX]\]/, '- [' + (newChecked ? 'x' : ' ') + ']');
 
     cb.disabled = true;
-    setStatus('Saving…');
+    setStatus('Salvataggio…');
     try {
-      await save(newLines, (newChecked ? 'Check' : 'Uncheck') + ': ' + item.text.slice(0, 60));
+      await save(newLines, (newChecked ? 'Spunta' : 'Rimuovi spunta') + ': ' + item.text.slice(0, 60));
       rawLines = newLines;
       item.checked = newChecked;
       li.classList.toggle('checked', newChecked);
-      setStatus('Saved', 'ok');
+      setStatus('Salvato', 'ok');
       updateOverallOnly();
-      setTimeout(function () { if (statusEl.textContent === 'Saved') setStatus(''); }, 2000);
+      setTimeout(function () { if (statusEl.textContent === 'Salvato') setStatus(''); }, 2000);
     } catch (err) {
       cb.checked = prevChecked;
       if (err.message === 'conflict') {
-        setStatus('Someone else changed the list — reloading…', 'error');
+        setStatus('Qualcun altro ha modificato la lista — ricarico…', 'error');
         await load(false);
       } else {
-        setStatus('Could not save: ' + err.message, 'error');
+        setStatus('Impossibile salvare: ' + err.message, 'error');
       }
     } finally {
       cb.disabled = !hasToken();
@@ -557,20 +599,20 @@
     newLines.splice(lastLineIndex + 1, 0, '- [ ] ' + text);
 
     inputEl.disabled = true;
-    setStatus('Adding…');
+    setStatus('Aggiunta…');
     try {
-      await save(newLines, 'Add item: ' + text.slice(0, 60));
+      await save(newLines, 'Aggiungi elemento: ' + text.slice(0, 60));
       rawLines = newLines;
       parse(rawLines.join('\n'));
       render();
-      setStatus('Added', 'ok');
-      setTimeout(function () { if (statusEl.textContent === 'Added') setStatus(''); }, 2000);
+      setStatus('Aggiunto', 'ok');
+      setTimeout(function () { if (statusEl.textContent === 'Aggiunto') setStatus(''); }, 2000);
     } catch (err) {
       if (err.message === 'conflict') {
-        setStatus('Someone else changed the list — reloading…', 'error');
+        setStatus('Qualcun altro ha modificato la lista — ricarico…', 'error');
         await load(false);
       } else {
-        setStatus('Could not add item: ' + err.message, 'error');
+        setStatus('Impossibile aggiungere l\'elemento: ' + err.message, 'error');
       }
     }
   }
@@ -581,6 +623,7 @@
       localStorage.removeItem(TOKEN_KEY);
       updateAuthUI();
       render();
+      renderVoiceSlots();
       return;
     }
     tokenInput.value = '';
@@ -596,12 +639,13 @@
     modalBackdrop.style.display = 'none';
     updateAuthUI();
     load(true);
+    renderVoiceSlots();
   });
 
   refreshBtn.addEventListener('click', function () { load(true); });
 
   var d = new Date();
-  document.getElementById('doc-date').textContent = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  document.getElementById('doc-date').textContent = d.toLocaleDateString('it-IT', { month: 'short', day: 'numeric', year: 'numeric' });
 
   // ---- Timeline / Gantt ----
   function renderTimeline() {
@@ -614,7 +658,7 @@
       return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
     }
 
-    var dayLabels = ['Apr 4', 'Apr 5', 'Apr 6', 'Apr 7', 'Apr 8', 'Apr 9'];
+    var dayLabels = ['4 apr', '5 apr', '6 apr', '7 apr', '8 apr', '9 apr'];
     var daysEl = document.getElementById('tl-days');
     dayLabels.forEach(function (lbl) {
       var d = document.createElement('div');
@@ -624,36 +668,36 @@
     });
 
     var rows = [
-      { label: 'Flights', type: 'flights' },
+      { label: 'Voli', type: 'flights' },
       {
         label: 'Hotel',
         type: 'bar', style: 'tl-bg',
         start: axisStart, end: new Date(2027, 3, 9, 12, 30),
-        title: 'Same Longyearbyen hotel, all 5 nights'
+        title: 'Stesso hotel a Longyearbyen, tutte le 5 notti'
       },
       {
-        label: 'Coal mine',
+        label: 'Miniera',
         type: 'bar', style: 'tl-ice',
         start: new Date(2027, 3, 5, 9, 0), end: new Date(2027, 3, 5, 12, 0),
-        title: 'Coal mine tour — approx. time, not booked yet'
+        title: 'Visita alla miniera di carbone — orario approssimativo, non ancora prenotata'
       },
       {
-        label: 'East Coast expedition',
+        label: 'Spedizione Costa Est',
         type: 'bar', style: 'tl-accent',
         start: new Date(2027, 3, 5, 17, 0), end: new Date(2027, 3, 6, 18, 0),
-        title: '1-Night East Coast Adventure (snowmobile), Apr 5 17:00 – Apr 6 18:00'
+        title: 'Spedizione Costa Est, 1 notte (motoslitta), 5 apr 17:00 – 6 apr 18:00'
       },
       {
-        label: 'Ice Cave hike',
+        label: 'Grotta di ghiaccio',
         type: 'bar', style: 'tl-ice',
         start: new Date(2027, 3, 7, 9, 30), end: new Date(2027, 3, 7, 15, 0),
-        title: 'Ice Cave Hike – Frozen World, 09:30–15:00'
+        title: 'Grotta di ghiaccio – Frozen World, 09:30–15:00'
       },
       {
-        label: 'Free day',
+        label: 'Giorno libero',
         type: 'bar', style: 'tl-tbd',
         start: new Date(2027, 3, 8, 0, 0), end: new Date(2027, 3, 9, 0, 0),
-        title: 'Apr 8 — not decided yet'
+        title: '8 apr — non ancora deciso'
       }
     ];
 
@@ -675,8 +719,8 @@
 
       if (row.type === 'flights') {
         [
-          { dt: arrival, txt: '✈ Arrive ' + fmtTime(arrival), pos: 'start' },
-          { dt: departure, txt: '✈ Depart ' + fmtTime(departure), pos: 'end' }
+          { dt: arrival, txt: '✈ Arrivo ' + fmtTime(arrival), pos: 'start' },
+          { dt: departure, txt: '✈ Partenza ' + fmtTime(departure), pos: 'end' }
         ].forEach(function (f) {
           var p = document.createElement('div');
           p.className = 'tl-point tl-point-' + f.pos;
@@ -706,9 +750,253 @@
     });
   }
 
+  // ---- Countdown ----
+  function renderCountdown() {
+    var target = new Date(2027, 3, 4, 13, 15);
+    var daysEl = document.getElementById('cd-days');
+    var hoursEl = document.getElementById('cd-hours');
+    var minsEl = document.getElementById('cd-mins');
+    var secsEl = document.getElementById('cd-secs');
+    var phraseEl = document.getElementById('cd-phrase');
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function tick() {
+      var diff = target - new Date();
+      if (diff <= 0) {
+        daysEl.textContent = '0'; hoursEl.textContent = '00'; minsEl.textContent = '00'; secsEl.textContent = '00';
+        phraseEl.textContent = 'Siete partiti (o quasi)!';
+        return;
+      }
+      var days = Math.floor(diff / 86400000);
+      var hours = Math.floor((diff % 86400000) / 3600000);
+      var mins = Math.floor((diff % 3600000) / 60000);
+      var secs = Math.floor((diff % 60000) / 1000);
+      daysEl.textContent = days;
+      hoursEl.textContent = pad(hours);
+      minsEl.textContent = pad(mins);
+      secsEl.textContent = pad(secs);
+      var phrase;
+      if (days > 60) phrase = 'non è molto';
+      else if (days > 14) phrase = 'è abbastanza';
+      else if (days > 2) phrase = 'è';
+      else phrase = 'è molto';
+      phraseEl.textContent = 'La partenza ' + phrase + ' vicina.';
+    }
+    tick();
+    setInterval(tick, 1000);
+  }
+
+  // ---- Voices (record + save to repo as WAV via GitHub API) ----
+  var VOICE_SLOTS = [1, 2, 3];
+  var voiceMeta = {};
+  var voiceMetaSha = null;
+  var voiceFiles = {}; // slot -> { sha, dataUrl } | null
+
+  async function ghGetRaw(path) {
+    var res = await fetch('https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/' + path + '?ref=' + BRANCH, { headers: apiHeaders() });
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error('GET ' + path + ' failed (' + res.status + ')');
+    return res.json();
+  }
+  async function ghPutRaw(path, base64Content, message, sha) {
+    var body = { message: message, content: base64Content, branch: BRANCH };
+    if (sha) body.sha = sha;
+    var res = await fetch('https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/' + path, {
+      method: 'PUT',
+      headers: Object.assign({ 'Content-Type': 'application/json' }, apiHeaders()),
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) { var t = await res.text(); throw new Error('save failed (' + res.status + '): ' + t.slice(0, 200)); }
+    return res.json();
+  }
+  function blobToBase64(blob) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onloadend = function () { resolve(reader.result.split(',')[1]); };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+  function encodeWAV(samples, sampleRate) {
+    var buffer = new ArrayBuffer(44 + samples.length * 2);
+    var view = new DataView(buffer);
+    function writeStr(offset, str) { for (var i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i)); }
+    writeStr(0, 'RIFF'); view.setUint32(4, 36 + samples.length * 2, true); writeStr(8, 'WAVE');
+    writeStr(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
+    view.setUint32(24, sampleRate, true); view.setUint32(28, sampleRate * 2, true);
+    view.setUint16(32, 2, true); view.setUint16(34, 16, true);
+    writeStr(36, 'data'); view.setUint32(40, samples.length * 2, true);
+    var offset = 44;
+    for (var i = 0; i < samples.length; i++, offset += 2) {
+      var s = Math.max(-1, Math.min(1, samples[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+    }
+    return new Blob([view], { type: 'audio/wav' });
+  }
+
+  function voiceStatus(slot, msg, kind) {
+    var el = document.getElementById('voice-status-' + slot);
+    if (el) { el.textContent = msg || ''; el.className = 'voice-hint' + (kind ? ' ' + kind : ''); }
+  }
+
+  function renderVoiceSlots() {
+    var wrap = document.getElementById('voice-slots');
+    wrap.innerHTML = '';
+    var supported = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && (window.AudioContext || window.webkitAudioContext));
+
+    VOICE_SLOTS.forEach(function (slot) {
+      var row = document.createElement('div');
+      row.className = 'voice-slot';
+
+      var nameInput = document.createElement('input');
+      nameInput.type = 'text';
+      nameInput.className = 'voice-name-input';
+      nameInput.value = (voiceMeta[slot] && voiceMeta[slot].name) || ('Viaggiatore ' + slot);
+      nameInput.disabled = !hasToken();
+      nameInput.addEventListener('change', function () { saveVoiceName(slot, nameInput.value.trim() || ('Viaggiatore ' + slot)); });
+
+      var controls = document.createElement('div');
+      controls.className = 'voice-controls';
+
+      var existing = voiceFiles[slot];
+      if (existing) {
+        var audio = document.createElement('audio');
+        audio.className = 'voice-audio';
+        audio.controls = true;
+        audio.src = 'data:audio/wav;base64,' + existing.content;
+        controls.appendChild(audio);
+      }
+
+      var recBtn = document.createElement('button');
+      recBtn.className = 'btn btn-ghost';
+      recBtn.type = 'button';
+      recBtn.textContent = existing ? 'Ri-registra (3s)' : 'Registra (3s)';
+      recBtn.disabled = !hasToken() || !supported;
+      recBtn.addEventListener('click', function () { recordVoice(slot); });
+      controls.appendChild(recBtn);
+
+      var status = document.createElement('span');
+      status.className = 'voice-hint';
+      status.id = 'voice-status-' + slot;
+      if (!supported) status.textContent = 'Registrazione non supportata in questo browser';
+      else if (!hasToken()) status.textContent = 'Sblocca la modifica per registrare';
+      controls.appendChild(status);
+
+      row.appendChild(nameInput);
+      row.appendChild(controls);
+      wrap.appendChild(row);
+    });
+  }
+
+  async function loadVoices() {
+    try {
+      var metaData = await ghGetRaw('audio/meta.json');
+      if (metaData) {
+        voiceMetaSha = metaData.sha;
+        voiceMeta = JSON.parse(b64DecodeUnicode(metaData.content.replace(/\n/g, '')));
+      } else {
+        voiceMetaSha = null;
+        voiceMeta = {};
+      }
+    } catch (e) { voiceMeta = {}; voiceMetaSha = null; }
+
+    await Promise.all(VOICE_SLOTS.map(async function (slot) {
+      try {
+        var f = await ghGetRaw('audio/' + slot + '.wav');
+        voiceFiles[slot] = f ? { sha: f.sha, content: f.content.replace(/\n/g, '') } : null;
+      } catch (e) { voiceFiles[slot] = null; }
+    }));
+
+    renderVoiceSlots();
+  }
+
+  async function saveVoiceName(slot, name) {
+    if (!hasToken()) return;
+    voiceMeta[slot] = Object.assign({}, voiceMeta[slot], { name: name });
+    voiceStatus(slot, 'Salvataggio nome…');
+    try {
+      var b64 = b64EncodeUnicode(JSON.stringify(voiceMeta, null, 2));
+      var res = await ghPutRaw('audio/meta.json', b64, 'Aggiorna nome voce per slot ' + slot, voiceMetaSha);
+      voiceMetaSha = res.content.sha;
+      voiceStatus(slot, 'Salvato', 'ok');
+      setTimeout(function () { voiceStatus(slot, ''); }, 1800);
+    } catch (err) {
+      voiceStatus(slot, 'Impossibile salvare il nome: ' + err.message, 'error');
+    }
+  }
+
+  async function recordVoice(slot) {
+    if (!hasToken()) return;
+    voiceStatus(slot, 'Richiesta microfono…');
+    var stream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (err) {
+      voiceStatus(slot, 'Accesso al microfono negato', 'error');
+      return;
+    }
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    var ctx = new Ctx();
+    var source = ctx.createMediaStreamSource(stream);
+    var processor = ctx.createScriptProcessor(4096, 1, 1);
+    var silentGain = ctx.createGain();
+    silentGain.gain.value = 0;
+    var buffers = [];
+    var recorded = 0;
+    var maxSamples = Math.floor(ctx.sampleRate * 3);
+
+    function cleanup() {
+      try { processor.disconnect(); } catch (e) {}
+      try { source.disconnect(); } catch (e) {}
+      try { silentGain.disconnect(); } catch (e) {}
+      stream.getTracks().forEach(function (t) { t.stop(); });
+      ctx.close();
+    }
+
+    processor.onaudioprocess = function (e) {
+      if (recorded >= maxSamples) return;
+      var input = e.inputBuffer.getChannelData(0);
+      var remaining = maxSamples - recorded;
+      var toCopy = Math.min(input.length, remaining);
+      buffers.push(input.slice(0, toCopy));
+      recorded += toCopy;
+      voiceStatus(slot, 'Registrazione… ' + (recorded / ctx.sampleRate).toFixed(1) + 's / 3.0s');
+      if (recorded >= maxSamples) {
+        cleanup();
+        var total = buffers.reduce(function (a, b) { return a + b.length; }, 0);
+        var merged = new Float32Array(total);
+        var off = 0;
+        buffers.forEach(function (b) { merged.set(b, off); off += b.length; });
+        var wavBlob = encodeWAV(merged, ctx.sampleRate);
+        saveVoiceBlob(slot, wavBlob);
+      }
+    };
+
+    source.connect(processor);
+    processor.connect(silentGain);
+    silentGain.connect(ctx.destination);
+    voiceStatus(slot, 'Registrazione… 0.0s / 3.0s');
+  }
+
+  async function saveVoiceBlob(slot, blob) {
+    voiceStatus(slot, 'Salvataggio…');
+    try {
+      var b64 = await blobToBase64(blob);
+      var existing = voiceFiles[slot];
+      var res = await ghPutRaw('audio/' + slot + '.wav', b64, 'Registrazione voce per slot ' + slot, existing ? existing.sha : null);
+      voiceFiles[slot] = { sha: res.content.sha, content: b64 };
+      renderVoiceSlots();
+      voiceStatus(slot, 'Salvato', 'ok');
+      setTimeout(function () { voiceStatus(slot, ''); }, 1800);
+    } catch (err) {
+      voiceStatus(slot, 'Impossibile salvare: ' + err.message, 'error');
+    }
+  }
+
   renderTimeline();
+  renderCountdown();
   updateAuthUI();
   load(true);
+  loadVoices();
 })();
 </script>
 </body>
