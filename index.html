@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Manifesto Svalbard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #f3f6f8;
@@ -78,19 +81,19 @@
 
   /* ---- Timeline / Gantt ---- */
   .timeline-scroll { overflow-x: auto; }
-  .timeline { min-width: 760px; padding: 0.9rem 1.25rem 1.1rem; }
+  .timeline { min-width: 300px; padding: 0.8rem 0.75rem 1rem; }
   .tl-header { display: flex; }
-  .tl-header-spacer { width: 150px; flex-shrink: 0; }
+  .tl-header-spacer { width: 58px; flex-shrink: 0; }
   .tl-header-days { flex: 1; display: flex; }
   .tl-header-days > div {
-    flex: 1; text-align: center; font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase;
-    color: var(--text-muted); padding-bottom: 0.4rem; border-left: 1px dashed var(--border);
+    flex: 1; text-align: center; font-size: 0.6rem; letter-spacing: 0.01em; text-transform: uppercase;
+    color: var(--text-muted); padding-bottom: 0.35rem; border-left: 1px dashed var(--border);
   }
   .tl-header-days > div:first-child { border-left: none; }
   .tl-row { display: flex; align-items: stretch; }
-  .tl-row-label { width: 150px; flex-shrink: 0; font-size: 0.78rem; color: var(--text); display: flex; align-items: center; padding-right: 0.6rem; }
+  .tl-row-label { width: 58px; flex-shrink: 0; font-size: 0.66rem; color: var(--text); display: flex; align-items: center; padding-right: 0.3rem; line-height: 1.1; }
   .tl-row-track {
-    flex: 1; position: relative; height: 2.5rem; border-top: 1px dashed var(--border);
+    flex: 1; position: relative; height: 2.1rem; border-top: 1px dashed var(--border);
     background-image: repeating-linear-gradient(to right, var(--border) 0, var(--border) 1px, transparent 1px, transparent calc(100% / 6));
   }
   .tl-bar {
@@ -105,7 +108,7 @@
   .tl-point.tl-point-start { transform: translateY(-50%); }
   .tl-point.tl-point-end { transform: translate(-100%, -50%); flex-direction: row-reverse; }
   .tl-point .tl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--surface); display: block; flex-shrink: 0; }
-  .tl-flight-label { font-size: 0.72rem; color: var(--text); white-space: nowrap; font-family: ui-monospace, "JetBrains Mono", "SF Mono", Consolas, monospace; }
+  .tl-flight-label { font-size: 0.62rem; color: var(--text); white-space: nowrap; font-family: ui-monospace, "JetBrains Mono", "SF Mono", Consolas, monospace; }
 
   /* ---- Title ---- */
   .page-title {
@@ -114,31 +117,49 @@
   }
 
   /* ---- Countdown ---- */
-  #cd-sentinel { height: 1px; }
-  .cd-sticky {
-    position: sticky; top: 0; z-index: 15;
+  .cd-card {
     background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
     box-shadow: var(--shadow); margin-bottom: 0.75rem; overflow: hidden;
   }
+  #cd-sentinel { height: 1px; }
   .cd-grid { display: flex; gap: 0.75rem; padding: 1.1rem 1.5rem; justify-content: center; flex-wrap: wrap; }
   .cd-unit { display: flex; flex-direction: column; align-items: center; min-width: 62px; }
   .cd-num { font-family: ui-monospace, "JetBrains Mono", "SF Mono", Consolas, monospace; font-size: 2rem; font-variant-numeric: tabular-nums; font-weight: 700; color: var(--text); }
   .cd-label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.2rem; }
-  .cd-compact { display: none; align-items: baseline; justify-content: center; gap: 0.5rem; padding: 0.65rem 1rem; }
-  .cd-compact-num { font-size: 1.35rem; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
-  .cd-compact-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
-  .cd-sticky.pinned .cd-full { display: none; }
-  .cd-sticky.pinned .cd-compact { display: flex; }
 
-  .cd-phrase { text-align: center; padding: 0 0.5rem 1.1rem; font-size: 1.05rem; color: var(--text-muted); }
+  .cd-compact-fixed {
+    position: fixed; top: 0.7rem; left: 50%; transform: translate(-50%, -140%);
+    z-index: 50; background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+    box-shadow: var(--shadow); padding: 0.5rem 1.1rem; display: flex; align-items: baseline; gap: 0.45rem;
+    transition: transform 0.25s ease; pointer-events: none;
+  }
+  .cd-compact-fixed.visible { transform: translate(-50%, 0); pointer-events: auto; }
+  .cd-compact-num { font-size: 1.25rem; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+  .cd-compact-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .cd-phrase { text-align: center; padding: 0 0.5rem 0.5rem; font-size: 1.05rem; color: var(--text-muted); }
   .vicina-word {
-    font-family: ui-monospace, "JetBrains Mono", "SF Mono", Consolas, monospace;
-    letter-spacing: 0.32em; text-transform: uppercase; font-weight: 700;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic; font-weight: 700;
+    letter-spacing: 0.32em; text-transform: uppercase;
     color: var(--accent); cursor: pointer; padding: 0 0.1em; border-bottom: 1.5px dashed var(--accent);
     transition: color 0.15s, border-color 0.15s;
   }
   .vicina-word:hover { color: var(--ice); border-bottom-color: var(--ice); }
   .vicina-word:active { transform: scale(0.95); display: inline-block; }
+  .speaker-btn {
+    background: none; border: none; cursor: pointer; font-size: 1.15rem; padding: 0 0.15rem;
+    vertical-align: middle; line-height: 1;
+  }
+  .speaker-btn:hover { transform: scale(1.15); }
+  .speaker-btn:focus-visible { outline: 2px solid var(--ice); outline-offset: 2px; border-radius: 4px; }
+
+  .voice-picker { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin: 0 0 0.3rem; }
+  .voice-select {
+    font-size: 0.85rem; padding: 0.4rem 0.6rem; border: 1px solid var(--border); border-radius: 6px;
+    background: var(--surface); color: var(--text);
+  }
+  .voice-picker-status { text-align: center; margin: 0 0 1.3rem; min-height: 1.1em; }
 
   .progress-mini { text-align: center; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.4rem; }
   .progress-mini b, .progress-mini span { color: var(--text); font-weight: 700; }
@@ -151,19 +172,14 @@
   }
   .btn-danger { color: var(--accent-contrast); background: var(--danger); }
   .btn-danger:hover { filter: brightness(1.08); }
-
-  /* ---- Voices ---- */
-  .voice-slot { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.25rem; flex-wrap: wrap; }
-  .voice-slot + .voice-slot { border-top: 1px dashed var(--border); }
-  .voice-name-input {
-    font-family: inherit; font-size: 0.9rem; padding: 0.4rem 0.6rem;
-    border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); width: 130px;
-  }
-  .voice-controls { display: flex; align-items: center; gap: 0.55rem; flex: 1; flex-wrap: wrap; }
-  .voice-audio { height: 32px; max-width: 220px; }
-  .rec-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--danger); display: inline-block; margin-right: 0.35rem; animation: rec-pulse 1s infinite; }
-  @keyframes rec-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
   .voice-hint { font-size: 0.78rem; color: var(--text-muted); }
+
+  /* ---- Lodging ---- */
+  .lodging-list { list-style: none; margin: 0; padding: 0.5rem 0 0.7rem; }
+  .lodging-list li { padding: 0.6rem 1.25rem; }
+  .lodging-list li + li { border-top: 1px dashed var(--border); }
+  .lodging-list a { color: var(--ice); font-weight: 600; font-size: 0.95rem; }
+  .lodging-note { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem; }
 
   section.card { border: 1px solid var(--border); background: var(--surface); border-radius: 8px; box-shadow: var(--shadow); margin-bottom: 1.1rem; overflow: hidden; }
   .card-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.9rem 1.25rem; background: var(--surface-2); border-bottom: 1px solid var(--border); }
@@ -236,22 +252,28 @@
 
   <h1 class="page-title">Viaggio Svalbard<br>Aprile 2027</h1>
 
+  <div class="cd-card" id="cd-card">
+    <div class="cd-grid">
+      <div class="cd-unit"><span class="cd-num mono" id="cd-days">&ndash;</span><span class="cd-label">giorni</span></div>
+      <div class="cd-unit"><span class="cd-num mono" id="cd-hours">&ndash;</span><span class="cd-label">ore</span></div>
+      <div class="cd-unit"><span class="cd-num mono" id="cd-mins">&ndash;</span><span class="cd-label">minuti</span></div>
+      <div class="cd-unit"><span class="cd-num mono" id="cd-secs">&ndash;</span><span class="cd-label">secondi</span></div>
+    </div>
+  </div>
   <div id="cd-sentinel"></div>
-  <div class="cd-sticky" id="cd-sticky">
-    <div class="cd-full" id="cd-full">
-      <div class="cd-grid">
-        <div class="cd-unit"><span class="cd-num mono" id="cd-days">&ndash;</span><span class="cd-label">giorni</span></div>
-        <div class="cd-unit"><span class="cd-num mono" id="cd-hours">&ndash;</span><span class="cd-label">ore</span></div>
-        <div class="cd-unit"><span class="cd-num mono" id="cd-mins">&ndash;</span><span class="cd-label">minuti</span></div>
-        <div class="cd-unit"><span class="cd-num mono" id="cd-secs">&ndash;</span><span class="cd-label">secondi</span></div>
-      </div>
-    </div>
-    <div class="cd-compact" id="cd-compact">
-      <span class="cd-compact-num mono" id="cd-compact-days">&ndash;</span><span class="cd-compact-label">giorni alla partenza</span>
-    </div>
+
+  <div class="cd-compact-fixed" id="cd-compact-fixed">
+    <span class="cd-compact-num mono" id="cd-compact-days">&ndash;</span><span class="cd-compact-label">giorni alla partenza</span>
   </div>
 
   <p class="cd-phrase" id="cd-phrase"></p>
+
+  <div class="voice-picker">
+    <select class="voice-select mono" id="voice-select"></select>
+    <button class="btn btn-ghost" id="voice-record-btn" type="button">Registra (3s)</button>
+    <button class="btn btn-ghost" id="voice-delete-btn" type="button" style="display:none;">Elimina</button>
+  </div>
+  <p class="voice-hint voice-picker-status" id="voice-picker-status"></p>
 
   <div class="progress-mini mono"><span id="remaining-count">&ndash;</span> rimanenti</div>
   <div class="gauge gauge-top"><div class="gauge-fill" id="overall-fill"></div></div>
@@ -274,10 +296,12 @@
 
   <section class="card">
     <div class="card-head">
-      <div><h2>Voci</h2></div>
-      <div class="card-count mono">max 3s ciascuna</div>
+      <div><h2>Possibili alloggi</h2></div>
     </div>
-    <div id="voice-slots"></div>
+    <ul class="lodging-list">
+      <li><a href="https://www.radissonhotels.com/en-us/hotels/radisson-blu-spitsbergen-polar" target="_blank" rel="noopener">Radisson Blu Polar Hotel, Spitsbergen</a><span class="lodging-note">Full-service, 3 min a piedi dal centro, sauna</span></li>
+      <li><a href="https://hurtigrutensvalbard.com/en/hotels-and-accommodation/coal-miners-cabins" target="_blank" rel="noopener">Coal Miners&rsquo; Cabins</a><span class="lodging-note">Nybyen, opzione più economica, ~20 min a piedi dal centro</span></li>
+    </ul>
   </section>
 
   <div id="content"><div class="loading">Caricamento lista&hellip;</div></div>
@@ -624,7 +648,7 @@
       localStorage.removeItem(TOKEN_KEY);
       updateAuthUI();
       render();
-      renderVoiceSlots();
+      renderVoicePicker();
       return;
     }
     tokenInput.value = '';
@@ -640,10 +664,37 @@
     modalBackdrop.style.display = 'none';
     updateAuthUI();
     load(true);
-    renderVoiceSlots();
+    renderVoicePicker();
   });
 
   refreshBtn.addEventListener('click', function () { load(true); });
+
+  document.getElementById('voice-select').addEventListener('change', function (e) {
+    selectedSlot = parseInt(e.target.value, 10);
+    localStorage.setItem('svalbard-voice-selected', String(selectedSlot));
+    renderVoicePicker();
+  });
+  document.getElementById('voice-record-btn').addEventListener('click', function () { recordVoice(selectedSlot); });
+  (function () {
+    var delBtn = document.getElementById('voice-delete-btn');
+    var confirming = false, confirmTimer = null;
+    delBtn.addEventListener('click', function () {
+      if (!confirming) {
+        confirming = true;
+        delBtn.textContent = 'Conferma?';
+        delBtn.classList.add('btn-danger');
+        confirmTimer = setTimeout(function () {
+          confirming = false;
+          delBtn.textContent = 'Elimina';
+          delBtn.classList.remove('btn-danger');
+        }, 4000);
+      } else {
+        confirming = false;
+        clearTimeout(confirmTimer);
+        deleteVoice(selectedSlot);
+      }
+    });
+  })();
 
   // ---- Timeline / Gantt ----
   function renderTimeline() {
@@ -680,19 +731,19 @@
         title: 'Visita alla miniera di carbone — orario approssimativo, non ancora prenotata'
       },
       {
-        label: 'Spedizione Costa Est',
+        label: 'Costa Est',
         type: 'bar', style: 'tl-accent',
         start: new Date(2027, 3, 5, 17, 0), end: new Date(2027, 3, 6, 18, 0),
         title: 'Spedizione Costa Est, 1 notte (motoslitta), 5 apr 17:00 – 6 apr 18:00'
       },
       {
-        label: 'Grotta di ghiaccio',
+        label: 'Grotta',
         type: 'bar', style: 'tl-ice',
         start: new Date(2027, 3, 7, 9, 30), end: new Date(2027, 3, 7, 15, 0),
         title: 'Grotta di ghiaccio – Frozen World, 09:30–15:00'
       },
       {
-        label: 'Giorno libero',
+        label: 'Libero',
         type: 'bar', style: 'tl-tbd',
         start: new Date(2027, 3, 8, 0, 0), end: new Date(2027, 3, 9, 0, 0),
         title: '8 apr — non ancora deciso'
@@ -766,8 +817,16 @@
       span.className = 'vicina-word';
       span.textContent = word;
       span.title = 'Clicca per un saluto';
-      span.addEventListener('click', playRandomVoice);
+      span.addEventListener('click', playSelectedVoice);
       phraseEl.appendChild(span);
+      var speaker = document.createElement('button');
+      speaker.type = 'button';
+      speaker.className = 'speaker-btn';
+      speaker.textContent = '🔊';
+      speaker.setAttribute('aria-label', 'Ascolta');
+      speaker.addEventListener('click', playSelectedVoice);
+      phraseEl.appendChild(document.createTextNode(' '));
+      phraseEl.appendChild(speaker);
       phraseEl.appendChild(document.createTextNode(suffix));
     }
 
@@ -800,20 +859,19 @@
 
     if (window.IntersectionObserver) {
       var sentinel = document.getElementById('cd-sentinel');
-      var stickyEl = document.getElementById('cd-sticky');
+      var compactFixed = document.getElementById('cd-compact-fixed');
       var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) { stickyEl.classList.toggle('pinned', !entry.isIntersecting); });
+        entries.forEach(function (entry) { compactFixed.classList.toggle('visible', !entry.isIntersecting); });
       }, { threshold: 0 });
       io.observe(sentinel);
     }
   }
 
-  function playRandomVoice() {
-    var available = VOICE_SLOTS.filter(function (s) { return voiceFiles[s]; });
-    if (!available.length) return;
-    var slot = available[Math.floor(Math.random() * available.length)];
+  function playSelectedVoice() {
+    var f = voiceFiles[selectedSlot];
+    if (!f) return;
     try {
-      var audio = new Audio('data:audio/wav;base64,' + voiceFiles[slot].content);
+      var audio = new Audio('data:audio/wav;base64,' + f.content);
       audio.play().catch(function () {});
     } catch (e) {}
   }
@@ -823,7 +881,8 @@
   var DEFAULT_VOICE_NAMES = { 1: 'Luigi', 2: 'Andrea', 3: 'Alessandro' };
   var voiceMeta = {};
   var voiceMetaSha = null;
-  var voiceFiles = {}; // slot -> { sha, dataUrl } | null
+  var voiceFiles = {}; // slot -> { sha, content(base64) } | null
+  var selectedSlot = parseInt(localStorage.getItem('svalbard-voice-selected') || '1', 10);
 
   async function ghGetRaw(path) {
     var res = await fetch('https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/' + path + '?ref=' + BRANCH, { headers: apiHeaders() });
@@ -876,83 +935,38 @@
     return new Blob([view], { type: 'audio/wav' });
   }
 
-  function voiceStatus(slot, msg, kind) {
-    var el = document.getElementById('voice-status-' + slot);
-    if (el) { el.textContent = msg || ''; el.className = 'voice-hint' + (kind ? ' ' + kind : ''); }
+  function voiceStatus(msg, kind) {
+    var el = document.getElementById('voice-picker-status');
+    if (el) { el.textContent = msg || ''; el.className = 'voice-hint voice-picker-status' + (kind ? ' ' + kind : ''); }
   }
 
-  function renderVoiceSlots() {
-    var wrap = document.getElementById('voice-slots');
-    wrap.innerHTML = '';
-    var supported = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && (window.AudioContext || window.webkitAudioContext));
-
+  function renderVoicePicker() {
+    var select = document.getElementById('voice-select');
+    select.innerHTML = '';
     VOICE_SLOTS.forEach(function (slot) {
-      var row = document.createElement('div');
-      row.className = 'voice-slot';
-
-      var nameInput = document.createElement('input');
-      nameInput.type = 'text';
-      nameInput.className = 'voice-name-input';
-      nameInput.value = (voiceMeta[slot] && voiceMeta[slot].name) || DEFAULT_VOICE_NAMES[slot];
-      nameInput.disabled = !hasToken();
-      nameInput.addEventListener('change', function () { saveVoiceName(slot, nameInput.value.trim() || DEFAULT_VOICE_NAMES[slot]); });
-
-      var controls = document.createElement('div');
-      controls.className = 'voice-controls';
-
-      var existing = voiceFiles[slot];
-      if (existing) {
-        var audio = document.createElement('audio');
-        audio.className = 'voice-audio';
-        audio.controls = true;
-        audio.src = 'data:audio/wav;base64,' + existing.content;
-        controls.appendChild(audio);
-      }
-
-      var recBtn = document.createElement('button');
-      recBtn.className = 'btn btn-ghost';
-      recBtn.type = 'button';
-      recBtn.textContent = existing ? 'Ri-registra (3s)' : 'Registra (3s)';
-      recBtn.disabled = !hasToken() || !supported;
-      recBtn.addEventListener('click', function () { recordVoice(slot); });
-      controls.appendChild(recBtn);
-
-      if (existing) {
-        var delBtn = document.createElement('button');
-        delBtn.className = 'btn btn-ghost';
-        delBtn.type = 'button';
-        delBtn.textContent = 'Elimina';
-        delBtn.disabled = !hasToken();
-        var confirming = false, confirmTimer = null;
-        delBtn.addEventListener('click', function () {
-          if (!confirming) {
-            confirming = true;
-            delBtn.textContent = 'Conferma?';
-            delBtn.classList.add('btn-danger');
-            confirmTimer = setTimeout(function () {
-              confirming = false;
-              delBtn.textContent = 'Elimina';
-              delBtn.classList.remove('btn-danger');
-            }, 4000);
-          } else {
-            clearTimeout(confirmTimer);
-            deleteVoice(slot);
-          }
-        });
-        controls.appendChild(delBtn);
-      }
-
-      var status = document.createElement('span');
-      status.className = 'voice-hint';
-      status.id = 'voice-status-' + slot;
-      if (!supported) status.textContent = 'Registrazione non supportata in questo browser';
-      else if (!hasToken()) status.textContent = 'Sblocca la modifica per registrare';
-      controls.appendChild(status);
-
-      row.appendChild(nameInput);
-      row.appendChild(controls);
-      wrap.appendChild(row);
+      var opt = document.createElement('option');
+      opt.value = slot;
+      opt.textContent = (voiceMeta[slot] && voiceMeta[slot].name) || DEFAULT_VOICE_NAMES[slot];
+      if (slot === selectedSlot) opt.selected = true;
+      select.appendChild(opt);
     });
+
+    var supported = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && (window.AudioContext || window.webkitAudioContext));
+    var existing = voiceFiles[selectedSlot];
+
+    var recBtn = document.getElementById('voice-record-btn');
+    recBtn.textContent = existing ? 'Ri-registra (3s)' : 'Registra (3s)';
+    recBtn.disabled = !hasToken() || !supported;
+
+    var delBtn = document.getElementById('voice-delete-btn');
+    delBtn.style.display = existing ? 'inline-flex' : 'none';
+    delBtn.disabled = !hasToken();
+    delBtn.textContent = 'Elimina';
+    delBtn.classList.remove('btn-danger');
+
+    if (!supported) voiceStatus('Registrazione non supportata in questo browser');
+    else if (!hasToken()) voiceStatus('Sblocca la modifica per registrare');
+    else voiceStatus('');
   }
 
   async function loadVoices() {
@@ -974,32 +988,17 @@
       } catch (e) { voiceFiles[slot] = null; }
     }));
 
-    renderVoiceSlots();
-  }
-
-  async function saveVoiceName(slot, name) {
-    if (!hasToken()) return;
-    voiceMeta[slot] = Object.assign({}, voiceMeta[slot], { name: name });
-    voiceStatus(slot, 'Salvataggio nome…');
-    try {
-      var b64 = b64EncodeUnicode(JSON.stringify(voiceMeta, null, 2));
-      var res = await ghPutRaw('audio/meta.json', b64, 'Aggiorna nome voce per slot ' + slot, voiceMetaSha);
-      voiceMetaSha = res.content.sha;
-      voiceStatus(slot, 'Salvato', 'ok');
-      setTimeout(function () { voiceStatus(slot, ''); }, 1800);
-    } catch (err) {
-      voiceStatus(slot, 'Impossibile salvare il nome: ' + err.message, 'error');
-    }
+    renderVoicePicker();
   }
 
   async function recordVoice(slot) {
     if (!hasToken()) return;
-    voiceStatus(slot, 'Richiesta microfono…');
+    voiceStatus('Richiesta microfono…');
     var stream;
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch (err) {
-      voiceStatus(slot, 'Accesso al microfono negato', 'error');
+      voiceStatus('Accesso al microfono negato', 'error');
       return;
     }
     var Ctx = window.AudioContext || window.webkitAudioContext;
@@ -1027,7 +1026,7 @@
       var toCopy = Math.min(input.length, remaining);
       buffers.push(input.slice(0, toCopy));
       recorded += toCopy;
-      voiceStatus(slot, 'Registrazione… ' + (recorded / ctx.sampleRate).toFixed(1) + 's / 3.0s');
+      voiceStatus('Registrazione… ' + (recorded / ctx.sampleRate).toFixed(1) + 's / 3.0s');
       if (recorded >= maxSamples) {
         cleanup();
         var total = buffers.reduce(function (a, b) { return a + b.length; }, 0);
@@ -1042,34 +1041,34 @@
     source.connect(processor);
     processor.connect(silentGain);
     silentGain.connect(ctx.destination);
-    voiceStatus(slot, 'Registrazione… 0.0s / 3.0s');
+    voiceStatus('Registrazione… 0.0s / 3.0s');
   }
 
   async function deleteVoice(slot) {
     var existing = voiceFiles[slot];
     if (!existing) return;
-    voiceStatus(slot, 'Eliminazione…');
+    voiceStatus('Eliminazione…');
     try {
       await ghDeleteRaw('audio/' + slot + '.wav', existing.sha, 'Delete voice recording for slot ' + slot);
       voiceFiles[slot] = null;
-      renderVoiceSlots();
+      renderVoicePicker();
     } catch (err) {
-      voiceStatus(slot, 'Impossibile eliminare: ' + err.message, 'error');
+      voiceStatus('Impossibile eliminare: ' + err.message, 'error');
     }
   }
 
   async function saveVoiceBlob(slot, blob) {
-    voiceStatus(slot, 'Salvataggio…');
+    voiceStatus('Salvataggio…');
     try {
       var b64 = await blobToBase64(blob);
       var existing = voiceFiles[slot];
       var res = await ghPutRaw('audio/' + slot + '.wav', b64, 'Registrazione voce per slot ' + slot, existing ? existing.sha : null);
       voiceFiles[slot] = { sha: res.content.sha, content: b64 };
-      renderVoiceSlots();
-      voiceStatus(slot, 'Salvato', 'ok');
-      setTimeout(function () { voiceStatus(slot, ''); }, 1800);
+      renderVoicePicker();
+      voiceStatus('Salvato', 'ok');
+      setTimeout(function () { voiceStatus(''); }, 1800);
     } catch (err) {
-      voiceStatus(slot, 'Impossibile salvare: ' + err.message, 'error');
+      voiceStatus('Impossibile salvare: ' + err.message, 'error');
     }
   }
 
