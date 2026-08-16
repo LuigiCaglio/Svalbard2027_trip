@@ -98,8 +98,9 @@
   }
   .tl-bar {
     position: absolute; top: 0.45rem; bottom: 0.45rem; border-radius: 5px;
-    min-width: 3px;
+    min-width: 3px; cursor: pointer;
   }
+  .tl-bar:hover { filter: brightness(1.1); outline: 2px solid var(--ice); outline-offset: 1px; }
   .tl-bar.tl-accent { background: var(--accent); }
   .tl-bar.tl-ice { background: var(--ice); }
   .tl-bar.tl-bg { background: var(--surface-2); border: 1px dashed var(--border); }
@@ -254,7 +255,20 @@
     padding: 0.6rem 0.7rem; border: 1px solid var(--border); border-radius: 6px;
     background: var(--surface-2); color: var(--text); margin-bottom: 0.9rem;
   }
-  .modal-actions { display: flex; justify-content: flex-end; gap: 0.6rem; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 0.4rem; }
+
+  .detail-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.4rem 0; border-top: 1px dashed var(--border); font-size: 0.88rem; }
+  .detail-row:first-child { border-top: none; }
+  .detail-key { color: var(--text-muted); flex-shrink: 0; }
+  .detail-label {
+    display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.78rem; color: var(--text-muted);
+    margin-bottom: 0.7rem;
+  }
+  .detail-label input, .detail-label textarea {
+    font-family: inherit; font-size: 0.9rem; padding: 0.45rem 0.6rem;
+    border: 1px solid var(--border); border-radius: 6px; background: var(--surface-2); color: var(--text);
+    resize: vertical;
+  }
 
   footer.legend { text-align: center; color: var(--text-muted); font-size: 0.75rem; margin-top: 2rem; }
   footer.legend span { margin: 0 0.4rem; }
@@ -306,6 +320,7 @@
           <div class="tl-header-days" id="tl-days"></div>
         </div>
         <div id="tl-rows"></div>
+        <div id="tl-bar-rows"></div>
       </div>
     </div>
   </section>
@@ -428,6 +443,35 @@
     <div class="modal-actions">
       <button class="btn btn-ghost" id="modal-cancel" type="button">Annulla</button>
       <button class="btn btn-accent" id="modal-save" type="button">Salva</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="detail-modal-backdrop" style="display:none;">
+  <div class="modal">
+    <h3 id="detail-title">&nbsp;</h3>
+    <div id="detail-view">
+      <div class="detail-row"><span class="detail-key">Giorni</span><span id="detail-days"></span></div>
+      <div class="detail-row"><span class="detail-key">Inizio</span><span id="detail-start"></span></div>
+      <div class="detail-row"><span class="detail-key">Fine</span><span id="detail-end"></span></div>
+      <div class="detail-row"><span class="detail-key">Note</span><span id="detail-notes"></span></div>
+      <div class="voice-hint" id="detail-status"></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="detail-close" type="button">Chiudi</button>
+        <button class="btn btn-accent" id="detail-modify" type="button">Modifica</button>
+      </div>
+    </div>
+    <div id="detail-edit" style="display:none;">
+      <label class="detail-label">Data inizio<input type="date" id="edit-start-date"></label>
+      <label class="detail-label">Ora inizio<input type="time" id="edit-start-time"></label>
+      <label class="detail-label">Data fine<input type="date" id="edit-end-date"></label>
+      <label class="detail-label">Ora fine<input type="time" id="edit-end-time"></label>
+      <label class="detail-label">Note<textarea id="edit-notes" rows="2"></textarea></label>
+      <div class="voice-hint" id="edit-status"></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="detail-cancel-edit" type="button">Annulla</button>
+        <button class="btn btn-accent" id="detail-save" type="button">Salva</button>
+      </div>
     </div>
   </div>
 </div>
@@ -791,16 +835,32 @@
   })();
 
   // ---- Timeline / Gantt ----
-  function renderTimeline() {
-    var axisStart = new Date(2027, 3, 4, 0, 0);   // Apr 4, 2027, 00:00
-    var axisEnd = new Date(2027, 3, 10, 0, 0);    // Apr 10, 2027, 00:00 (end of Apr 9)
-    var totalMs = axisEnd - axisStart;
-    function pct(dt) { return Math.max(0, Math.min(100, ((dt - axisStart) / totalMs) * 100)); }
-    function fmtTime(dt) {
-      var h = dt.getHours(), m = dt.getMinutes();
-      return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
-    }
+  var TL_AXIS_START = new Date(2027, 3, 4, 0, 0);   // Apr 4, 2027, 00:00
+  var TL_AXIS_END = new Date(2027, 3, 10, 0, 0);    // Apr 10, 2027, 00:00 (end of Apr 9)
+  var TL_TOTAL_MS = TL_AXIS_END - TL_AXIS_START;
+  function tlPct(dt) { return Math.max(0, Math.min(100, ((dt - TL_AXIS_START) / TL_TOTAL_MS) * 100)); }
+  function tlFmtTime(dt) {
+    var h = dt.getHours(), m = dt.getMinutes();
+    return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+  }
 
+  var DEFAULT_SCHEDULE_ROWS = [
+    { id: 'hotel', label: 'Hotel', style: 'tl-bg', startDate: '2027-04-04', startTime: '13:15', endDate: '2027-04-09', endTime: '12:30', notes: 'Stesso hotel a Longyearbyen, tutte le 5 notti' },
+    { id: 'miniera', label: 'Miniera', style: 'tl-ice', startDate: '2027-04-05', startTime: '09:00', endDate: '2027-04-05', endTime: '12:00', notes: 'Visita alla miniera di carbone — orario approssimativo, non ancora prenotata' },
+    { id: 'slitta', label: 'Slitta malata', style: 'tl-accent', startDate: '2027-04-05', startTime: '17:00', endDate: '2027-04-06', endTime: '18:00', notes: 'Spedizione Costa Est, 1 notte (motoslitta)' },
+    { id: 'grotta', label: 'Grotta', style: 'tl-ice', startDate: '2027-04-07', startTime: '09:30', endDate: '2027-04-07', endTime: '15:00', notes: 'Grotta di ghiaccio – Frozen World' },
+    { id: 'libero', label: 'Libero', style: 'tl-tbd', startDate: '2027-04-08', startTime: '00:00', endDate: '2027-04-09', endTime: '00:00', notes: '8 apr — non ancora deciso' }
+  ];
+  var scheduleRows = [];
+  var scheduleSha = null;
+
+  function tlRowDate(row, which) {
+    var d = row[which + 'Date'].split('-').map(Number);
+    var t = row[which + 'Time'].split(':').map(Number);
+    return new Date(d[0], d[1] - 1, d[2], t[0], t[1]);
+  }
+
+  function renderTimelineSkeleton() {
     var dayLabels = ['4 apr', '5 apr', '6 apr', '7 apr', '8 apr', '9 apr'];
     var daysEl = document.getElementById('tl-days');
     dayLabels.forEach(function (lbl) {
@@ -810,48 +870,64 @@
       daysEl.appendChild(d);
     });
 
-    var rows = [
-      { label: 'Voli', type: 'flights' },
-      {
-        label: 'Hotel',
-        type: 'bar', style: 'tl-bg',
-        start: axisStart, end: new Date(2027, 3, 9, 12, 30),
-        title: 'Stesso hotel a Longyearbyen, tutte le 5 notti'
-      },
-      {
-        label: 'Miniera',
-        type: 'bar', style: 'tl-ice',
-        start: new Date(2027, 3, 5, 9, 0), end: new Date(2027, 3, 5, 12, 0),
-        title: 'Visita alla miniera di carbone — orario approssimativo, non ancora prenotata'
-      },
-      {
-        label: 'Slitta malata',
-        type: 'bar', style: 'tl-accent',
-        start: new Date(2027, 3, 5, 17, 0), end: new Date(2027, 3, 6, 18, 0),
-        title: 'Spedizione Costa Est, 1 notte (motoslitta), 5 apr 17:00 – 6 apr 18:00'
-      },
-      {
-        label: 'Grotta',
-        type: 'bar', style: 'tl-ice',
-        start: new Date(2027, 3, 7, 9, 30), end: new Date(2027, 3, 7, 15, 0),
-        title: 'Grotta di ghiaccio – Frozen World, 09:30–15:00'
-      },
-      {
-        label: 'Libero',
-        type: 'bar', style: 'tl-tbd',
-        start: new Date(2027, 3, 8, 0, 0), end: new Date(2027, 3, 9, 0, 0),
-        title: '8 apr — non ancora deciso'
-      }
-    ];
-
     var rowsEl = document.getElementById('tl-rows');
     var arrival = new Date(2027, 3, 4, 13, 15);
     var departure = new Date(2027, 3, 9, 12, 30);
 
-    rows.forEach(function (row) {
+    var rowEl = document.createElement('div');
+    rowEl.className = 'tl-row';
+    var labelEl = document.createElement('div');
+    labelEl.className = 'tl-row-label';
+    labelEl.textContent = 'Voli';
+    rowEl.appendChild(labelEl);
+    var trackEl = document.createElement('div');
+    trackEl.className = 'tl-row-track';
+    [
+      { dt: arrival, txt: '✈ Arrivo ' + tlFmtTime(arrival), pos: 'start' },
+      { dt: departure, txt: '✈ Partenza ' + tlFmtTime(departure), pos: 'end' }
+    ].forEach(function (f) {
+      var p = document.createElement('div');
+      p.className = 'tl-point tl-point-' + f.pos;
+      p.style.left = tlPct(f.dt) + '%';
+      var dot = document.createElement('span');
+      dot.className = 'tl-dot';
+      var label = document.createElement('span');
+      label.className = 'tl-flight-label';
+      label.textContent = f.txt;
+      p.appendChild(dot);
+      p.appendChild(label);
+      trackEl.appendChild(p);
+    });
+    rowEl.appendChild(trackEl);
+    rowsEl.appendChild(rowEl);
+  }
+
+  async function loadSchedule() {
+    try {
+      var data = await ghGetRaw('schedule.json');
+      if (data) {
+        scheduleSha = data.sha;
+        scheduleRows = JSON.parse(b64DecodeUnicode(data.content.replace(/\n/g, '')));
+      } else {
+        scheduleSha = null;
+        scheduleRows = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE_ROWS));
+      }
+    } catch (e) {
+      scheduleSha = null;
+      scheduleRows = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE_ROWS));
+    }
+    renderScheduleRows();
+  }
+
+  function renderScheduleRows() {
+    var wrap = document.getElementById('tl-bar-rows');
+    wrap.innerHTML = '';
+    scheduleRows.forEach(function (row) {
+      var start = tlRowDate(row, 'start');
+      var end = tlRowDate(row, 'end');
+
       var rowEl = document.createElement('div');
       rowEl.className = 'tl-row';
-
       var labelEl = document.createElement('div');
       labelEl.className = 'tl-row-label';
       labelEl.textContent = row.label;
@@ -859,39 +935,96 @@
 
       var trackEl = document.createElement('div');
       trackEl.className = 'tl-row-track';
-
-      if (row.type === 'flights') {
-        [
-          { dt: arrival, txt: '✈ Arrivo ' + fmtTime(arrival), pos: 'start' },
-          { dt: departure, txt: '✈ Partenza ' + fmtTime(departure), pos: 'end' }
-        ].forEach(function (f) {
-          var p = document.createElement('div');
-          p.className = 'tl-point tl-point-' + f.pos;
-          p.style.left = pct(f.dt) + '%';
-          var dot = document.createElement('span');
-          dot.className = 'tl-dot';
-          var label = document.createElement('span');
-          label.className = 'tl-flight-label';
-          label.textContent = f.txt;
-          p.appendChild(dot);
-          p.appendChild(label);
-          trackEl.appendChild(p);
-        });
-      } else {
-        var bar = document.createElement('div');
-        bar.className = 'tl-bar ' + row.style;
-        var left = pct(row.start);
-        var width = Math.max(pct(row.end) - left, 0.4);
-        bar.style.left = left + '%';
-        bar.style.width = width + '%';
-        bar.title = row.title || row.label;
-        trackEl.appendChild(bar);
-      }
+      var bar = document.createElement('div');
+      bar.className = 'tl-bar ' + row.style;
+      var left = tlPct(start);
+      var width = Math.max(tlPct(end) - left, 0.4);
+      bar.style.left = left + '%';
+      bar.style.width = width + '%';
+      bar.title = row.notes || row.label;
+      bar.addEventListener('click', function () { openDetailModal(row.id); });
+      trackEl.appendChild(bar);
 
       rowEl.appendChild(trackEl);
-      rowsEl.appendChild(rowEl);
+      wrap.appendChild(rowEl);
     });
   }
+
+  function tlFmtDateShort(dateStr) {
+    return parseInt(dateStr.split('-')[2], 10) + ' apr';
+  }
+
+  var detailOpenId = null;
+  function openDetailModal(rowId) {
+    var row = scheduleRows.filter(function (r) { return r.id === rowId; })[0];
+    if (!row) return;
+    detailOpenId = rowId;
+    document.getElementById('detail-title').textContent = row.label;
+    document.getElementById('detail-days').textContent = row.startDate === row.endDate
+      ? tlFmtDateShort(row.startDate)
+      : tlFmtDateShort(row.startDate) + ' – ' + tlFmtDateShort(row.endDate);
+    document.getElementById('detail-start').textContent = tlFmtDateShort(row.startDate) + ', ' + row.startTime;
+    document.getElementById('detail-end').textContent = tlFmtDateShort(row.endDate) + ', ' + row.endTime;
+    document.getElementById('detail-notes').textContent = row.notes || '–';
+    document.getElementById('detail-modify').style.display = hasToken() ? 'inline-flex' : 'none';
+    document.getElementById('detail-status').textContent = '';
+    document.getElementById('detail-view').style.display = 'block';
+    document.getElementById('detail-edit').style.display = 'none';
+    document.getElementById('detail-modal-backdrop').style.display = 'flex';
+  }
+
+  function openScheduleEdit() {
+    var row = scheduleRows.filter(function (r) { return r.id === detailOpenId; })[0];
+    if (!row) return;
+    document.getElementById('edit-start-date').value = row.startDate;
+    document.getElementById('edit-start-time').value = row.startTime;
+    document.getElementById('edit-end-date').value = row.endDate;
+    document.getElementById('edit-end-time').value = row.endTime;
+    document.getElementById('edit-notes').value = row.notes || '';
+    document.getElementById('edit-status').textContent = '';
+    document.getElementById('detail-view').style.display = 'none';
+    document.getElementById('detail-edit').style.display = 'block';
+  }
+
+  async function saveScheduleEdit() {
+    var row = scheduleRows.filter(function (r) { return r.id === detailOpenId; })[0];
+    if (!row || !hasToken()) return;
+    var newRow = Object.assign({}, row, {
+      startDate: document.getElementById('edit-start-date').value || row.startDate,
+      startTime: document.getElementById('edit-start-time').value || row.startTime,
+      endDate: document.getElementById('edit-end-date').value || row.endDate,
+      endTime: document.getElementById('edit-end-time').value || row.endTime,
+      notes: document.getElementById('edit-notes').value
+    });
+    var statusEl2 = document.getElementById('edit-status');
+    statusEl2.textContent = 'Salvataggio…';
+    statusEl2.className = 'voice-hint';
+    try {
+      var newRows = scheduleRows.map(function (r) { return r.id === row.id ? newRow : r; });
+      var b64 = b64EncodeUnicode(JSON.stringify(newRows, null, 2));
+      var res = await ghPutRaw('schedule.json', b64, 'Update schedule row: ' + row.id, scheduleSha);
+      scheduleSha = res.content.sha;
+      scheduleRows = newRows;
+      renderScheduleRows();
+      openDetailModal(row.id);
+    } catch (err) {
+      statusEl2.textContent = 'Impossibile salvare: ' + err.message;
+      statusEl2.className = 'voice-hint error';
+    }
+  }
+
+  document.getElementById('detail-close').addEventListener('click', function () {
+    document.getElementById('detail-modal-backdrop').style.display = 'none';
+  });
+  document.getElementById('detail-modal-backdrop').addEventListener('click', function (e) {
+    if (e.target === this) this.style.display = 'none';
+  });
+  document.getElementById('detail-modify').addEventListener('click', openScheduleEdit);
+  document.getElementById('detail-cancel-edit').addEventListener('click', function () {
+    document.getElementById('detail-view').style.display = 'block';
+    document.getElementById('detail-edit').style.display = 'none';
+  });
+  document.getElementById('detail-save').addEventListener('click', saveScheduleEdit);
 
   // ---- Countdown ----
   function renderCountdown() {
@@ -1166,11 +1299,12 @@
     }
   }
 
-  renderTimeline();
+  renderTimelineSkeleton();
   renderCountdown();
   updateAuthUI();
   load(true);
   loadVoices();
+  loadSchedule();
 })();
 </script>
 </body>
