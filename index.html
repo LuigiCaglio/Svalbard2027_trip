@@ -237,6 +237,13 @@
   }
   .add-row input[type="text"]:focus-visible { outline: 2px solid var(--ice); outline-offset: 1px; }
 
+  .add-row-multi { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.7rem 1.25rem 1rem; }
+  .add-row-multi input[type="text"] {
+    flex: 1 1 120px; font-family: inherit; font-size: 0.85rem; padding: 0.5rem 0.6rem;
+    border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text);
+  }
+  .add-row-multi input[type="text"]:focus-visible { outline: 2px solid var(--ice); outline-offset: 1px; }
+
   .loading, .load-error { text-align: center; color: var(--text-muted); padding: 3rem 1rem; }
   .load-error { color: var(--danger); }
 
@@ -331,19 +338,28 @@
     <div class="card-head">
       <div><h2>Possibili alloggi</h2></div>
     </div>
-    <ul class="lodging-list">
-      <li><a href="https://www.radissonhotels.com/en-us/hotels/radisson-blu-spitsbergen-polar" target="_blank" rel="noopener">Radisson Blu Polar Hotel, Spitsbergen</a><span class="lodging-note">Full-service, 3 min a piedi dal centro, sauna</span></li>
-      <li><a href="https://hurtigrutensvalbard.com/en/hotels-and-accommodation/coal-miners-cabins" target="_blank" rel="noopener">Coal Miners&rsquo; Cabins</a><span class="lodging-note">Nybyen, opzione più economica, ~20 min a piedi dal centro</span></li>
-    </ul>
+    <ul class="lodging-list" id="alloggi-list"></ul>
+    <div class="add-row-multi">
+      <input type="text" id="alloggi-name" placeholder="Nome">
+      <input type="text" id="alloggi-link" placeholder="Link (opzionale)">
+      <input type="text" id="alloggi-note" placeholder="Note (opzionale)">
+      <button class="btn btn-ghost" id="alloggi-add-btn" type="button">Aggiungi</button>
+    </div>
+    <p class="voice-hint" id="alloggi-status" style="padding: 0 1.25rem 0.7rem;"></p>
   </section>
 
   <section class="card">
     <div class="card-head">
       <div><h2>Prenotato</h2></div>
     </div>
-    <ul class="lodging-list" id="prenotato-list">
-      <li class="lodging-empty">Ancora nulla, solo il volo per ora.</li>
-    </ul>
+    <ul class="lodging-list" id="prenotato-list"></ul>
+    <div class="add-row-multi">
+      <input type="text" id="prenotato-name" placeholder="Nome">
+      <input type="text" id="prenotato-link" placeholder="Link (opzionale)">
+      <input type="text" id="prenotato-note" placeholder="Note (opzionale)">
+      <button class="btn btn-ghost" id="prenotato-add-btn" type="button">Aggiungi</button>
+    </div>
+    <p class="voice-hint" id="prenotato-status" style="padding: 0 1.25rem 0.7rem;"></p>
   </section>
 
   <section class="card">
@@ -353,32 +369,23 @@
     <div class="table-scroll">
       <table class="escursioni-table">
         <thead><tr><th>Nome</th><th>Link</th><th>Note</th></tr></thead>
-        <tbody>
-          <tr>
-            <td>Spedizione Costa Est</td>
-            <td><a class="trunc-link" href="https://www.wildlife.no/en/product-page/snowmobile-safari-to-east-coast-one-night" target="_blank" rel="noopener">https://www.wildlife.no/en/product-page/snowmobile-safari-to-east-coast-one-night</a></td>
-            <td>5&ndash;6 apr, 17:00&ndash;18:00 &mdash; da prenotare</td>
-          </tr>
-          <tr>
-            <td>Grotta di ghiaccio &ndash; Frozen World</td>
-            <td><a class="trunc-link" href="https://www.wildlife.no/en/product-page/ice-cave-hike-frozen-world" target="_blank" rel="noopener">https://www.wildlife.no/en/product-page/ice-cave-hike-frozen-world</a></td>
-            <td>7 apr, 09:30&ndash;15:00 &mdash; da prenotare</td>
-          </tr>
-          <tr>
-            <td>Miniera di carbone (Gruve 3)</td>
-            <td><a class="trunc-link" href="https://gruve3.no/mine-no-3" target="_blank" rel="noopener">https://gruve3.no/mine-no-3</a></td>
-            <td>5 apr, mattina &mdash; da prenotare</td>
-          </tr>
-        </tbody>
+        <tbody id="escursioni-body"></tbody>
       </table>
     </div>
+    <div class="add-row-multi">
+      <input type="text" id="escursioni-name" placeholder="Nome">
+      <input type="text" id="escursioni-link" placeholder="Link (opzionale)">
+      <input type="text" id="escursioni-note" placeholder="Note (opzionale)">
+      <button class="btn btn-ghost" id="escursioni-add-btn" type="button">Aggiungi</button>
+    </div>
+    <p class="voice-hint" id="escursioni-status" style="padding: 0 1.25rem 0.7rem;"></p>
   </section>
 
   <section class="card">
     <div class="card-head">
       <div><h2>Da fare</h2></div>
     </div>
-    <ul class="lodging-list" id="dafare-list"></ul>
+    <ul class="items" id="dafare-list"></ul>
     <div class="add-row">
       <input type="text" id="dafare-input" placeholder="Aggiungi una cosa da fare&hellip;">
       <button class="btn btn-ghost" id="dafare-add-btn" type="button">Aggiungi</button>
@@ -761,6 +768,9 @@
       render();
       renderVoicePicker();
       renderDaFareList();
+      alloggiModule.render();
+      prenotatoModule.render();
+      escursioniModule.render();
       return;
     }
     tokenInput.value = '';
@@ -778,6 +788,9 @@
     load(true);
     renderVoicePicker();
     renderDaFareList();
+    alloggiModule.render();
+    prenotatoModule.render();
+    escursioniModule.render();
   });
 
   refreshBtn.addEventListener('click', function () { load(true); });
@@ -1001,26 +1014,182 @@
   });
   document.getElementById('detail-save').addEventListener('click', saveScheduleEdit);
 
-  // ---- Da fare ----
-  var DEFAULT_DAFARE_ITEMS = ['Assicurazione sanitaria', 'Luigi manda la mail a hotel', 'SIM Card'];
+  // ---- Generic small synced list (name/link/note) used by Alloggi, Prenotato, Escursioni ----
+  function makeLinkedListModule(opts) {
+    // opts: file, defaults, listElId or bodyElId, mode ('list'|'table'), nameId, linkId, noteId, addBtnId, statusId
+    var items = [];
+    var sha = null;
+
+    async function load() {
+      try {
+        var data = await ghGetRaw(opts.file);
+        if (data) {
+          sha = data.sha;
+          items = JSON.parse(b64DecodeUnicode(data.content.replace(/\n/g, '')));
+        } else {
+          sha = null;
+          items = JSON.parse(JSON.stringify(opts.defaults));
+        }
+      } catch (e) {
+        sha = null;
+        items = JSON.parse(JSON.stringify(opts.defaults));
+      }
+      render();
+    }
+
+    function render() {
+      if (opts.mode === 'list') {
+        var el = document.getElementById(opts.containerId);
+        el.innerHTML = '';
+        if (!items.length) {
+          var empty = document.createElement('li');
+          empty.className = 'lodging-empty';
+          empty.textContent = opts.emptyText || 'Niente per ora.';
+          el.appendChild(empty);
+        } else {
+          items.forEach(function (item) {
+            var li = document.createElement('li');
+            if (item.link) {
+              var a = document.createElement('a');
+              a.href = item.link; a.target = '_blank'; a.rel = 'noopener'; a.textContent = item.name;
+              li.appendChild(a);
+            } else {
+              li.appendChild(document.createTextNode(item.name));
+            }
+            if (item.note) {
+              var note = document.createElement('span');
+              note.className = 'lodging-note';
+              note.textContent = item.note;
+              li.appendChild(note);
+            }
+            el.appendChild(li);
+          });
+        }
+      } else {
+        var body = document.getElementById(opts.containerId);
+        body.innerHTML = '';
+        items.forEach(function (item) {
+          var tr = document.createElement('tr');
+          var tdName = document.createElement('td');
+          tdName.textContent = item.name;
+          var tdLink = document.createElement('td');
+          if (item.link) {
+            var a = document.createElement('a');
+            a.className = 'trunc-link'; a.href = item.link; a.target = '_blank'; a.rel = 'noopener'; a.textContent = item.link;
+            tdLink.appendChild(a);
+          }
+          var tdNote = document.createElement('td');
+          tdNote.textContent = item.note || '';
+          tr.appendChild(tdName); tr.appendChild(tdLink); tr.appendChild(tdNote);
+          body.appendChild(tr);
+        });
+      }
+
+      var nameInput = document.getElementById(opts.nameId);
+      var linkInput = document.getElementById(opts.linkId);
+      var noteInput = document.getElementById(opts.noteId);
+      var addBtn = document.getElementById(opts.addBtnId);
+      [nameInput, linkInput, noteInput, addBtn].forEach(function (el) { el.disabled = !hasToken(); });
+      nameInput.placeholder = hasToken() ? 'Nome' : 'Sblocca la modifica per aggiungere';
+    }
+
+    async function addItem() {
+      var nameInput = document.getElementById(opts.nameId);
+      var linkInput = document.getElementById(opts.linkId);
+      var noteInput = document.getElementById(opts.noteId);
+      var statusEl = document.getElementById(opts.statusId);
+      var name = nameInput.value.trim();
+      if (!name || !hasToken()) return;
+      var newItem = { name: name, link: linkInput.value.trim(), note: noteInput.value.trim() };
+      statusEl.textContent = 'Aggiunta…';
+      statusEl.className = 'voice-hint';
+      try {
+        var newItems = items.concat([newItem]);
+        var b64 = b64EncodeUnicode(JSON.stringify(newItems, null, 2));
+        var res = await ghPutRaw(opts.file, b64, 'Add item: ' + name.slice(0, 60), sha);
+        sha = res.content.sha;
+        items = newItems;
+        nameInput.value = ''; linkInput.value = ''; noteInput.value = '';
+        render();
+        statusEl.textContent = 'Aggiunto';
+        statusEl.className = 'voice-hint ok';
+        setTimeout(function () { if (statusEl.textContent === 'Aggiunto') statusEl.textContent = ''; }, 1800);
+      } catch (err) {
+        statusEl.textContent = 'Impossibile salvare: ' + err.message;
+        statusEl.className = 'voice-hint error';
+      }
+    }
+
+    document.getElementById(opts.addBtnId).addEventListener('click', addItem);
+    [opts.nameId, opts.linkId, opts.noteId].forEach(function (id) {
+      document.getElementById(id).addEventListener('keydown', function (e) { if (e.key === 'Enter') addItem(); });
+    });
+
+    return { load: load, render: render };
+  }
+
+  var alloggiModule = makeLinkedListModule({
+    file: 'alloggi.json',
+    defaults: [
+      { name: 'Radisson Blu Polar Hotel, Spitsbergen', link: 'https://www.radissonhotels.com/en-us/hotels/radisson-blu-spitsbergen-polar', note: 'Full-service, 3 min a piedi dal centro, sauna' },
+      { name: 'Coal Miners’ Cabins', link: 'https://hurtigrutensvalbard.com/en/hotels-and-accommodation/coal-miners-cabins', note: 'Nybyen, opzione più economica, ~20 min a piedi dal centro' }
+    ],
+    mode: 'list', containerId: 'alloggi-list', emptyText: 'Niente per ora.',
+    nameId: 'alloggi-name', linkId: 'alloggi-link', noteId: 'alloggi-note', addBtnId: 'alloggi-add-btn', statusId: 'alloggi-status'
+  });
+
+  var prenotatoModule = makeLinkedListModule({
+    file: 'prenotato.json',
+    defaults: [],
+    mode: 'list', containerId: 'prenotato-list', emptyText: 'Ancora nulla, solo il volo per ora.',
+    nameId: 'prenotato-name', linkId: 'prenotato-link', noteId: 'prenotato-note', addBtnId: 'prenotato-add-btn', statusId: 'prenotato-status'
+  });
+
+  var escursioniModule = makeLinkedListModule({
+    file: 'escursioni.json',
+    defaults: [
+      { name: 'Spedizione Costa Est', link: 'https://www.wildlife.no/en/product-page/snowmobile-safari-to-east-coast-one-night', note: '5–6 apr, 17:00–18:00 — da prenotare' },
+      { name: 'Grotta di ghiaccio – Frozen World', link: 'https://www.wildlife.no/en/product-page/ice-cave-hike-frozen-world', note: '7 apr, 09:30–15:00 — da prenotare' },
+      { name: 'Miniera di carbone (Gruve 3)', link: 'https://gruve3.no/mine-no-3', note: '5 apr, mattina — da prenotare' }
+    ],
+    mode: 'table', containerId: 'escursioni-body',
+    nameId: 'escursioni-name', linkId: 'escursioni-link', noteId: 'escursioni-note', addBtnId: 'escursioni-add-btn', statusId: 'escursioni-status'
+  });
+
+  // ---- Da fare (with per-item checkbox) ----
+  var DEFAULT_DAFARE_ITEMS = [
+    { text: 'Assicurazione sanitaria', done: false },
+    { text: 'Luigi manda la mail a hotel', done: false },
+    { text: 'SIM Card', done: false }
+  ];
   var daFareItems = [];
   var daFareSha = null;
+
+  function normalizeDaFareItem(x) {
+    return typeof x === 'string' ? { text: x, done: false } : { text: x.text, done: !!x.done };
+  }
 
   async function loadDaFare() {
     try {
       var data = await ghGetRaw('dafare.json');
       if (data) {
         daFareSha = data.sha;
-        daFareItems = JSON.parse(b64DecodeUnicode(data.content.replace(/\n/g, '')));
+        daFareItems = JSON.parse(b64DecodeUnicode(data.content.replace(/\n/g, ''))).map(normalizeDaFareItem);
       } else {
         daFareSha = null;
-        daFareItems = DEFAULT_DAFARE_ITEMS.slice();
+        daFareItems = JSON.parse(JSON.stringify(DEFAULT_DAFARE_ITEMS));
       }
     } catch (e) {
       daFareSha = null;
-      daFareItems = DEFAULT_DAFARE_ITEMS.slice();
+      daFareItems = JSON.parse(JSON.stringify(DEFAULT_DAFARE_ITEMS));
     }
     renderDaFareList();
+  }
+
+  async function saveDaFare(message) {
+    var b64 = b64EncodeUnicode(JSON.stringify(daFareItems, null, 2));
+    var res = await ghPutRaw('dafare.json', b64, message, daFareSha);
+    daFareSha = res.content.sha;
   }
 
   function renderDaFareList() {
@@ -1032,9 +1201,28 @@
       empty.textContent = 'Niente per ora.';
       listEl.appendChild(empty);
     } else {
-      daFareItems.forEach(function (text) {
+      daFareItems.forEach(function (item, idx) {
         var li = document.createElement('li');
-        li.textContent = text;
+        if (item.done) li.classList.add('checked');
+
+        var cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = item.done;
+        cb.disabled = !hasToken();
+        var cbId = 'dafare-item-' + idx;
+        cb.id = cbId;
+        cb.addEventListener('change', function () { toggleDaFareItem(idx, cb, li); });
+
+        var label = document.createElement('label');
+        label.className = 'item-label';
+        label.htmlFor = cbId;
+        var titleSpan = document.createElement('span');
+        titleSpan.className = 'item-title';
+        titleSpan.textContent = item.text;
+        label.appendChild(titleSpan);
+
+        li.appendChild(cb);
+        li.appendChild(label);
         listEl.appendChild(li);
       });
     }
@@ -1043,6 +1231,24 @@
     input.disabled = !hasToken();
     input.placeholder = hasToken() ? 'Aggiungi una cosa da fare…' : 'Sblocca la modifica per aggiungere';
     btn.disabled = !hasToken();
+  }
+
+  async function toggleDaFareItem(idx, cb, li) {
+    var prev = daFareItems[idx].done;
+    var next = cb.checked;
+    cb.disabled = true;
+    try {
+      daFareItems[idx].done = next;
+      await saveDaFare((next ? 'Check' : 'Uncheck') + ' da fare: ' + daFareItems[idx].text.slice(0, 60));
+      li.classList.toggle('checked', next);
+    } catch (err) {
+      daFareItems[idx].done = prev;
+      cb.checked = prev;
+      document.getElementById('dafare-status').textContent = 'Impossibile salvare: ' + err.message;
+      document.getElementById('dafare-status').className = 'voice-hint error';
+    } finally {
+      cb.disabled = !hasToken();
+    }
   }
 
   async function addDaFareItem() {
@@ -1054,7 +1260,7 @@
     statusEl3.textContent = 'Aggiunta…';
     statusEl3.className = 'voice-hint';
     try {
-      var newItems = daFareItems.concat([text]);
+      var newItems = daFareItems.concat([{ text: text, done: false }]);
       var b64 = b64EncodeUnicode(JSON.stringify(newItems, null, 2));
       var res = await ghPutRaw('dafare.json', b64, 'Add da fare item: ' + text.slice(0, 60), daFareSha);
       daFareSha = res.content.sha;
@@ -1095,15 +1301,6 @@
       span.title = 'Clicca per un saluto';
       span.addEventListener('click', playSelectedVoice);
       phraseEl.appendChild(span);
-      var speaker = document.createElement('button');
-      speaker.type = 'button';
-      speaker.className = 'speaker-btn';
-      speaker.textContent = '🔊';
-      speaker.setAttribute('aria-label', 'Ascolta il saluto');
-      speaker.title = 'Riproduce la voce salvata';
-      speaker.addEventListener('click', playSelectedVoice);
-      phraseEl.appendChild(document.createTextNode(' '));
-      phraseEl.appendChild(speaker);
       var talker = document.createElement('button');
       talker.type = 'button';
       talker.className = 'speaker-btn';
@@ -1376,6 +1573,9 @@
   loadVoices();
   loadSchedule();
   loadDaFare();
+  alloggiModule.load();
+  prenotatoModule.load();
+  escursioniModule.load();
 })();
 </script>
 </body>
