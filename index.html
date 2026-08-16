@@ -44,10 +44,6 @@
   html, body { margin: 0; padding: 0; }
   body {
     background: var(--bg);
-    background-size: cover;
-    background-position: center top;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
     color: var(--text);
     font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 16px;
@@ -120,6 +116,14 @@
     text-align: center; margin: 0 0 1.1rem; line-height: 1.05;
     font-size: clamp(1.9rem, 7vw, 2.6rem); letter-spacing: -0.01em; text-wrap: balance;
   }
+
+  /* ---- Hero photo ---- */
+  .hero-wrap { margin: 0 0 1.1rem; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
+  .hero-img {
+    display: block; width: 100%; max-height: 320px; object-fit: cover; object-position: center 35%;
+    cursor: zoom-in;
+  }
+  .lightbox-img { max-width: 92vw; max-height: 88vh; border-radius: 8px; box-shadow: var(--shadow); }
 
   /* ---- Countdown ---- */
   .cd-card {
@@ -301,6 +305,10 @@
 
   <h1 class="page-title">Viaggio Svalbard<br>Aprile 2027</h1>
 
+  <div class="hero-wrap" id="hero-wrap" style="display:none;">
+    <img id="hero-img" class="hero-img" alt="Foto del gruppo">
+  </div>
+
   <div class="cd-card" id="cd-card">
     <div class="cd-grid">
       <div class="cd-unit"><span class="cd-num mono" id="cd-days">&ndash;</span><span class="cd-label">giorni</span></div>
@@ -413,9 +421,9 @@
     </span>
     <div class="status-line" id="status-line"></div>
     <div class="bg-upload-row">
-      <input type="file" accept="image/*" id="bg-file-input">
-      <button class="btn btn-ghost" id="bg-upload-btn" type="button">Carica sfondo</button>
-      <span class="voice-hint" id="bg-status"></span>
+      <input type="file" accept="image/*" id="hero-file-input">
+      <button class="btn btn-ghost" id="hero-upload-btn" type="button">Carica foto</button>
+      <span class="voice-hint" id="hero-status"></span>
     </div>
   </div>
 
@@ -440,6 +448,10 @@
       <button class="btn btn-accent" id="modal-save" type="button">Salva</button>
     </div>
   </div>
+</div>
+
+<div class="modal-backdrop" id="lightbox-backdrop" style="display:none;">
+  <img id="lightbox-img" class="lightbox-img" alt="Foto ingrandita">
 </div>
 
 <div class="modal-backdrop" id="detail-modal-backdrop" style="display:none;">
@@ -521,8 +533,8 @@
       authNoteEl.textContent = 'Solo visualizzazione. Sblocca la modifica per spuntare o aggiungere elementi.';
       unlockBtn.textContent = 'Sblocca modifica';
     }
-    document.getElementById('bg-file-input').disabled = !hasToken();
-    document.getElementById('bg-upload-btn').disabled = !hasToken();
+    document.getElementById('hero-file-input').disabled = !hasToken();
+    document.getElementById('hero-upload-btn').disabled = !hasToken();
   }
 
   // ---- parse CHECKLIST.md into sections/items, tracking exact line indices ----
@@ -1308,57 +1320,66 @@
   document.getElementById('dafare-add-btn').addEventListener('click', addDaFareItem);
   document.getElementById('dafare-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') addDaFareItem(); });
 
-  // ---- Background image ----
-  var BG_BASE_PATH = 'assets/background';
+  // ---- Hero photo (banner at top, click to enlarge) ----
+  var HERO_BASE_PATH = 'assets/hero';
 
-  function bgExtFromType(type) {
+  function heroExtFromType(type) {
     if (type === 'image/png') return 'png';
     if (type === 'image/webp') return 'webp';
     if (type === 'image/gif') return 'gif';
     return 'jpg';
   }
 
-  function applyBackground(path) {
+  function applyHero(path) {
     var url = 'https://raw.githubusercontent.com/' + OWNER + '/' + REPO + '/' + BRANCH + '/' + path;
-    document.body.style.backgroundImage = "url('" + url + "')";
+    var img = document.getElementById('hero-img');
+    img.src = url;
+    document.getElementById('hero-wrap').style.display = 'block';
   }
 
-  async function loadBackground() {
+  async function loadHero() {
     try {
-      var meta = await ghGetRaw('background.json');
+      var meta = await ghGetRaw('hero.json');
       if (meta) {
         var data = JSON.parse(b64DecodeUnicode(meta.content.replace(/\n/g, '')));
-        if (data.path) applyBackground(data.path);
+        if (data.path) applyHero(data.path);
       }
     } catch (e) {}
   }
 
-  async function uploadBackground() {
-    var fileInput = document.getElementById('bg-file-input');
-    var statusEl4 = document.getElementById('bg-status');
+  async function uploadHero() {
+    var fileInput = document.getElementById('hero-file-input');
+    var statusEl4 = document.getElementById('hero-status');
     var file = fileInput.files[0];
     if (!file || !hasToken()) return;
-    var path = BG_BASE_PATH + '.' + bgExtFromType(file.type);
+    var path = HERO_BASE_PATH + '.' + heroExtFromType(file.type);
     statusEl4.textContent = 'Caricamento…';
     statusEl4.className = 'voice-hint';
     try {
       var b64 = await blobToBase64(file);
       var existing = await ghGetRaw(path);
-      await ghPutRaw(path, b64, 'Update background image', existing ? existing.sha : null);
-      var metaExisting = await ghGetRaw('background.json');
+      await ghPutRaw(path, b64, 'Update hero photo', existing ? existing.sha : null);
+      var metaExisting = await ghGetRaw('hero.json');
       var metaB64 = b64EncodeUnicode(JSON.stringify({ path: path }, null, 2));
-      await ghPutRaw('background.json', metaB64, 'Update background meta', metaExisting ? metaExisting.sha : null);
-      applyBackground(path);
-      statusEl4.textContent = 'Sfondo aggiornato';
+      await ghPutRaw('hero.json', metaB64, 'Update hero meta', metaExisting ? metaExisting.sha : null);
+      applyHero(path);
+      statusEl4.textContent = 'Foto aggiornata';
       statusEl4.className = 'voice-hint ok';
-      setTimeout(function () { if (statusEl4.textContent === 'Sfondo aggiornato') statusEl4.textContent = ''; }, 2200);
+      setTimeout(function () { if (statusEl4.textContent === 'Foto aggiornata') statusEl4.textContent = ''; }, 2200);
     } catch (err) {
       statusEl4.textContent = 'Impossibile caricare: ' + err.message;
       statusEl4.className = 'voice-hint error';
     }
   }
 
-  document.getElementById('bg-upload-btn').addEventListener('click', uploadBackground);
+  document.getElementById('hero-upload-btn').addEventListener('click', uploadHero);
+  document.getElementById('hero-img').addEventListener('click', function () {
+    document.getElementById('lightbox-img').src = this.src;
+    document.getElementById('lightbox-backdrop').style.display = 'flex';
+  });
+  document.getElementById('lightbox-backdrop').addEventListener('click', function () {
+    this.style.display = 'none';
+  });
 
   // ---- Countdown ----
   function renderCountdown() {
@@ -1655,7 +1676,7 @@
   alloggiModule.load();
   prenotatoModule.load();
   escursioniModule.load();
-  loadBackground();
+  loadHero();
 })();
 </script>
 </body>
