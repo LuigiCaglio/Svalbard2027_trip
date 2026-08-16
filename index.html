@@ -124,9 +124,11 @@
     overflow-x: auto; background: var(--border);
     scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
   }
-  .hero-img {
-    display: block; width: 100%; height: 260px; object-fit: cover;
-    cursor: zoom-in; scroll-snap-align: start;
+  .hero-panel { position: relative; height: 260px; scroll-snap-align: start; }
+  .hero-img { display: block; width: 100%; height: 260px; object-fit: cover; cursor: zoom-in; }
+  .hero-scene-label {
+    position: absolute; top: 0.6rem; right: 0.7rem; color: #000;
+    font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; pointer-events: none;
   }
   .lightbox-img { max-width: 92vw; max-height: 88vh; border-radius: 8px; box-shadow: var(--shadow); }
 
@@ -1351,7 +1353,10 @@
   function renderHeroStrip() {
     var scrollEl = document.getElementById('hero-scroll');
     scrollEl.innerHTML = '';
-    heroPaths.forEach(function (path) {
+    heroPaths.forEach(function (path, idx) {
+      var panel = document.createElement('div');
+      panel.className = 'hero-panel';
+
       var img = document.createElement('img');
       img.className = 'hero-img';
       img.alt = 'Foto del gruppo';
@@ -1361,7 +1366,14 @@
         document.getElementById('lightbox-img').src = this.src;
         document.getElementById('lightbox-backdrop').style.display = 'flex';
       });
-      scrollEl.appendChild(img);
+      panel.appendChild(img);
+
+      var label = document.createElement('span');
+      label.className = 'hero-scene-label mono';
+      label.textContent = 'Scena ' + (idx + 1) + ' di ' + heroPaths.length;
+      panel.appendChild(label);
+
+      scrollEl.appendChild(panel);
     });
     document.getElementById('hero-wrap').style.display = heroPaths.length ? 'block' : 'none';
   }
