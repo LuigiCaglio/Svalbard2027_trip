@@ -50,43 +50,9 @@
   .mono { font-family: ui-monospace, "JetBrains Mono", "SF Mono", "Cascadia Mono", Consolas, monospace; }
   .wrap { max-width: 720px; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
 
-  header.top {
-    border: 1px solid var(--border);
-    background: var(--surface);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    margin-bottom: 1.75rem;
-  }
-  .top-band { padding: 1.5rem 1.5rem 1.1rem; }
-  .eyebrow {
-    font-size: 0.72rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-  h1 { margin: 0.5rem 0 0.15rem; font-size: clamp(1.6rem, 4vw, 2.05rem); letter-spacing: -0.01em; text-wrap: balance; }
-  .sub { color: var(--text-muted); font-size: 0.95rem; margin: 0; }
-
-  .tally-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.5rem 0; }
-  .tally-num { font-variant-numeric: tabular-nums; font-size: 0.85rem; color: var(--text-muted); }
-  .tally-num b { color: var(--text); font-weight: 700; }
   .gauge { height: 8px; background: var(--surface-2); border-radius: 999px; margin: 0.6rem 1.5rem 1.1rem; position: relative; overflow: hidden; border: 1px solid var(--border); }
   .gauge-fill { height: 100%; background: linear-gradient(90deg, var(--ice), var(--done)); border-radius: 999px; transition: width 0.35s ease; width: 0%; }
 
-  .auth-row {
-    border-top: 1px solid var(--border);
-    background: var(--surface-2);
-    padding: 0.85rem 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
   .auth-note { font-size: 0.78rem; color: var(--text-muted); max-width: 40ch; }
   .btn {
     font-family: inherit;
@@ -141,12 +107,50 @@
   .tl-point .tl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--surface); display: block; flex-shrink: 0; }
   .tl-flight-label { font-size: 0.72rem; color: var(--text); white-space: nowrap; font-family: ui-monospace, "JetBrains Mono", "SF Mono", Consolas, monospace; }
 
+  /* ---- Title ---- */
+  .page-title {
+    text-align: center; margin: 0 0 1.1rem; line-height: 1.05;
+    font-size: clamp(1.9rem, 7vw, 2.6rem); letter-spacing: -0.01em; text-wrap: balance;
+  }
+
   /* ---- Countdown ---- */
+  #cd-sentinel { height: 1px; }
+  .cd-sticky {
+    position: sticky; top: 0; z-index: 15;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    box-shadow: var(--shadow); margin-bottom: 0.75rem; overflow: hidden;
+  }
   .cd-grid { display: flex; gap: 0.75rem; padding: 1.1rem 1.5rem; justify-content: center; flex-wrap: wrap; }
   .cd-unit { display: flex; flex-direction: column; align-items: center; min-width: 62px; }
   .cd-num { font-family: ui-monospace, "JetBrains Mono", "SF Mono", Consolas, monospace; font-size: 2rem; font-variant-numeric: tabular-nums; font-weight: 700; color: var(--text); }
   .cd-label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.2rem; }
-  .cd-phrase { text-align: center; padding: 0 1.5rem 1.15rem; font-size: 0.95rem; color: var(--text-muted); font-style: italic; }
+  .cd-compact { display: none; align-items: baseline; justify-content: center; gap: 0.5rem; padding: 0.65rem 1rem; }
+  .cd-compact-num { font-size: 1.35rem; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+  .cd-compact-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .cd-sticky.pinned .cd-full { display: none; }
+  .cd-sticky.pinned .cd-compact { display: flex; }
+
+  .cd-phrase { text-align: center; padding: 0 0.5rem 1.1rem; font-size: 1.05rem; color: var(--text-muted); }
+  .vicina-word {
+    font-family: ui-monospace, "JetBrains Mono", "SF Mono", Consolas, monospace;
+    letter-spacing: 0.32em; text-transform: uppercase; font-weight: 700;
+    color: var(--accent); cursor: pointer; padding: 0 0.1em; border-bottom: 1.5px dashed var(--accent);
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .vicina-word:hover { color: var(--ice); border-bottom-color: var(--ice); }
+  .vicina-word:active { transform: scale(0.95); display: inline-block; }
+
+  .progress-mini { text-align: center; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+  .progress-mini b, .progress-mini span { color: var(--text); font-weight: 700; }
+  .gauge-top { margin: 0 0 1.5rem; }
+
+  .bottom-controls {
+    border: 1px solid var(--border); background: var(--surface); border-radius: 8px; box-shadow: var(--shadow);
+    padding: 0.85rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+    flex-wrap: wrap; margin-bottom: 1.1rem;
+  }
+  .btn-danger { color: var(--accent-contrast); background: var(--danger); }
+  .btn-danger:hover { filter: brightness(1.08); }
 
   /* ---- Voices ---- */
   .voice-slot { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.25rem; flex-wrap: wrap; }
@@ -230,37 +234,27 @@
 <body>
 <div class="wrap">
 
-  <header class="top">
-    <div class="top-band">
-      <div class="eyebrow mono"><span>SVALBARD &middot; 4&ndash;9 APR 2027</span><span id="doc-date"></span></div>
-      <h1>Piano del viaggio</h1>
-      <p class="sub">In diretta da <code class="mono">CHECKLIST.md</code> su GitHub. Chiunque abbia questo link può vederlo &mdash; sblocca la modifica per spuntare gli elementi.</p>
-    </div>
-    <div class="tally-row mono"><span class="tally-num">FATTO <b id="overall-count">0/0</b></span><span class="tally-num" id="overall-pct">0%</span></div>
-    <div class="gauge"><div class="gauge-fill" id="overall-fill"></div></div>
-    <div class="auth-row">
-      <span class="auth-note" id="auth-note">Solo visualizzazione. Sblocca la modifica per spuntare o aggiungere elementi.</span>
-      <span style="display:flex; gap:0.5rem;">
-        <button class="btn btn-ghost" id="refresh-btn" type="button">Aggiorna</button>
-        <button class="btn btn-accent" id="unlock-btn" type="button">Sblocca modifica</button>
-      </span>
-    </div>
-    <div class="status-line" id="status-line"></div>
-  </header>
+  <h1 class="page-title">Viaggio Svalbard<br>Aprile 2027</h1>
 
-  <section class="card">
-    <div class="card-head">
-      <div><h2>Conto alla rovescia</h2></div>
-      <div class="card-count mono">4 apr 2027 &middot; 13:15</div>
+  <div id="cd-sentinel"></div>
+  <div class="cd-sticky" id="cd-sticky">
+    <div class="cd-full" id="cd-full">
+      <div class="cd-grid">
+        <div class="cd-unit"><span class="cd-num mono" id="cd-days">&ndash;</span><span class="cd-label">giorni</span></div>
+        <div class="cd-unit"><span class="cd-num mono" id="cd-hours">&ndash;</span><span class="cd-label">ore</span></div>
+        <div class="cd-unit"><span class="cd-num mono" id="cd-mins">&ndash;</span><span class="cd-label">minuti</span></div>
+        <div class="cd-unit"><span class="cd-num mono" id="cd-secs">&ndash;</span><span class="cd-label">secondi</span></div>
+      </div>
     </div>
-    <div class="cd-grid">
-      <div class="cd-unit"><span class="cd-num mono" id="cd-days">&ndash;</span><span class="cd-label">giorni</span></div>
-      <div class="cd-unit"><span class="cd-num mono" id="cd-hours">&ndash;</span><span class="cd-label">ore</span></div>
-      <div class="cd-unit"><span class="cd-num mono" id="cd-mins">&ndash;</span><span class="cd-label">minuti</span></div>
-      <div class="cd-unit"><span class="cd-num mono" id="cd-secs">&ndash;</span><span class="cd-label">secondi</span></div>
+    <div class="cd-compact" id="cd-compact">
+      <span class="cd-compact-num mono" id="cd-compact-days">&ndash;</span><span class="cd-compact-label">giorni alla partenza</span>
     </div>
-    <p class="cd-phrase" id="cd-phrase"></p>
-  </section>
+  </div>
+
+  <p class="cd-phrase" id="cd-phrase"></p>
+
+  <div class="progress-mini mono"><span id="remaining-count">&ndash;</span> rimanenti</div>
+  <div class="gauge gauge-top"><div class="gauge-fill" id="overall-fill"></div></div>
 
   <section class="card">
     <div class="card-head">
@@ -287,6 +281,15 @@
   </section>
 
   <div id="content"><div class="loading">Caricamento lista&hellip;</div></div>
+
+  <div class="bottom-controls">
+    <span class="auth-note" id="auth-note">Solo visualizzazione. Sblocca la modifica per spuntare o aggiungere elementi.</span>
+    <span style="display:flex; gap:0.5rem;">
+      <button class="btn btn-ghost" id="refresh-btn" type="button">Aggiorna</button>
+      <button class="btn btn-accent" id="unlock-btn" type="button">Sblocca modifica</button>
+    </span>
+    <div class="status-line" id="status-line"></div>
+  </div>
 
   <footer class="legend mono">
     <span>Longyearbyen, Svalbard</span>&middot;<span><a href="https://github.com/LuigiCaglio/Svalbard2027_trip" target="_blank" rel="noopener">codice sorgente su GitHub</a></span>
@@ -488,9 +491,8 @@
       contentEl.appendChild(card);
     });
 
-    document.getElementById('overall-count').textContent = totalChecked + '/' + items.length;
+    document.getElementById('remaining-count').textContent = items.length - totalChecked;
     var pct = items.length ? Math.round((totalChecked / items.length) * 100) : 0;
-    document.getElementById('overall-pct').textContent = pct + '%';
     document.getElementById('overall-fill').style.width = pct + '%';
   }
 
@@ -566,9 +568,8 @@
 
   function updateOverallOnly() {
     var totalChecked = items.filter(function (i) { return i.checked; }).length;
-    document.getElementById('overall-count').textContent = totalChecked + '/' + items.length;
+    document.getElementById('remaining-count').textContent = items.length - totalChecked;
     var pct = items.length ? Math.round((totalChecked / items.length) * 100) : 0;
-    document.getElementById('overall-pct').textContent = pct + '%';
     document.getElementById('overall-fill').style.width = pct + '%';
     document.querySelectorAll('section.card').forEach(function (card, idx) {
       var section = sections[idx];
@@ -643,9 +644,6 @@
   });
 
   refreshBtn.addEventListener('click', function () { load(true); });
-
-  var d = new Date();
-  document.getElementById('doc-date').textContent = d.toLocaleDateString('it-IT', { month: 'short', day: 'numeric', year: 'numeric' });
 
   // ---- Timeline / Gantt ----
   function renderTimeline() {
@@ -757,13 +755,28 @@
     var hoursEl = document.getElementById('cd-hours');
     var minsEl = document.getElementById('cd-mins');
     var secsEl = document.getElementById('cd-secs');
+    var compactDaysEl = document.getElementById('cd-compact-days');
     var phraseEl = document.getElementById('cd-phrase');
     function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+    function setPhrase(prefix, word, suffix) {
+      phraseEl.innerHTML = '';
+      phraseEl.appendChild(document.createTextNode(prefix + ' '));
+      var span = document.createElement('span');
+      span.className = 'vicina-word';
+      span.textContent = word;
+      span.title = 'Clicca per un saluto';
+      span.addEventListener('click', playRandomVoice);
+      phraseEl.appendChild(span);
+      phraseEl.appendChild(document.createTextNode(suffix));
+    }
+
     function tick() {
       var diff = target - new Date();
       if (diff <= 0) {
         daysEl.textContent = '0'; hoursEl.textContent = '00'; minsEl.textContent = '00'; secsEl.textContent = '00';
-        phraseEl.textContent = 'Siete partiti (o quasi)!';
+        compactDaysEl.textContent = '0';
+        setPhrase('Siete partiti', 'vicina', ' (o quasi)!');
         return;
       }
       var days = Math.floor(diff / 86400000);
@@ -774,19 +787,40 @@
       hoursEl.textContent = pad(hours);
       minsEl.textContent = pad(mins);
       secsEl.textContent = pad(secs);
+      compactDaysEl.textContent = days;
       var phrase;
       if (days < 30) phrase = 'è molto';
       else if (days < 60) phrase = 'è';
       else if (days < 120) phrase = 'è abbastanza';
       else phrase = 'non è molto';
-      phraseEl.textContent = 'La partenza ' + phrase + ' vicina.';
+      setPhrase('La partenza ' + phrase, 'vicina', '.');
     }
     tick();
     setInterval(tick, 1000);
+
+    if (window.IntersectionObserver) {
+      var sentinel = document.getElementById('cd-sentinel');
+      var stickyEl = document.getElementById('cd-sticky');
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) { stickyEl.classList.toggle('pinned', !entry.isIntersecting); });
+      }, { threshold: 0 });
+      io.observe(sentinel);
+    }
+  }
+
+  function playRandomVoice() {
+    var available = VOICE_SLOTS.filter(function (s) { return voiceFiles[s]; });
+    if (!available.length) return;
+    var slot = available[Math.floor(Math.random() * available.length)];
+    try {
+      var audio = new Audio('data:audio/wav;base64,' + voiceFiles[slot].content);
+      audio.play().catch(function () {});
+    } catch (e) {}
   }
 
   // ---- Voices (record + save to repo as WAV via GitHub API) ----
   var VOICE_SLOTS = [1, 2, 3];
+  var DEFAULT_VOICE_NAMES = { 1: 'Luigi', 2: 'Andrea', 3: 'Alessandro' };
   var voiceMeta = {};
   var voiceMetaSha = null;
   var voiceFiles = {}; // slot -> { sha, dataUrl } | null
@@ -806,6 +840,15 @@
       body: JSON.stringify(body)
     });
     if (!res.ok) { var t = await res.text(); throw new Error('save failed (' + res.status + '): ' + t.slice(0, 200)); }
+    return res.json();
+  }
+  async function ghDeleteRaw(path, sha, message) {
+    var res = await fetch('https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/' + path, {
+      method: 'DELETE',
+      headers: Object.assign({ 'Content-Type': 'application/json' }, apiHeaders()),
+      body: JSON.stringify({ message: message, sha: sha, branch: BRANCH })
+    });
+    if (!res.ok) { var t = await res.text(); throw new Error('delete failed (' + res.status + '): ' + t.slice(0, 200)); }
     return res.json();
   }
   function blobToBase64(blob) {
@@ -850,9 +893,9 @@
       var nameInput = document.createElement('input');
       nameInput.type = 'text';
       nameInput.className = 'voice-name-input';
-      nameInput.value = (voiceMeta[slot] && voiceMeta[slot].name) || ('Viaggiatore ' + slot);
+      nameInput.value = (voiceMeta[slot] && voiceMeta[slot].name) || DEFAULT_VOICE_NAMES[slot];
       nameInput.disabled = !hasToken();
-      nameInput.addEventListener('change', function () { saveVoiceName(slot, nameInput.value.trim() || ('Viaggiatore ' + slot)); });
+      nameInput.addEventListener('change', function () { saveVoiceName(slot, nameInput.value.trim() || DEFAULT_VOICE_NAMES[slot]); });
 
       var controls = document.createElement('div');
       controls.className = 'voice-controls';
@@ -873,6 +916,31 @@
       recBtn.disabled = !hasToken() || !supported;
       recBtn.addEventListener('click', function () { recordVoice(slot); });
       controls.appendChild(recBtn);
+
+      if (existing) {
+        var delBtn = document.createElement('button');
+        delBtn.className = 'btn btn-ghost';
+        delBtn.type = 'button';
+        delBtn.textContent = 'Elimina';
+        delBtn.disabled = !hasToken();
+        var confirming = false, confirmTimer = null;
+        delBtn.addEventListener('click', function () {
+          if (!confirming) {
+            confirming = true;
+            delBtn.textContent = 'Conferma?';
+            delBtn.classList.add('btn-danger');
+            confirmTimer = setTimeout(function () {
+              confirming = false;
+              delBtn.textContent = 'Elimina';
+              delBtn.classList.remove('btn-danger');
+            }, 4000);
+          } else {
+            clearTimeout(confirmTimer);
+            deleteVoice(slot);
+          }
+        });
+        controls.appendChild(delBtn);
+      }
 
       var status = document.createElement('span');
       status.className = 'voice-hint';
@@ -975,6 +1043,19 @@
     processor.connect(silentGain);
     silentGain.connect(ctx.destination);
     voiceStatus(slot, 'Registrazione… 0.0s / 3.0s');
+  }
+
+  async function deleteVoice(slot) {
+    var existing = voiceFiles[slot];
+    if (!existing) return;
+    voiceStatus(slot, 'Eliminazione…');
+    try {
+      await ghDeleteRaw('audio/' + slot + '.wav', existing.sha, 'Delete voice recording for slot ' + slot);
+      voiceFiles[slot] = null;
+      renderVoiceSlots();
+    } catch (err) {
+      voiceStatus(slot, 'Impossibile eliminare: ' + err.message, 'error');
+    }
   }
 
   async function saveVoiceBlob(slot, blob) {
