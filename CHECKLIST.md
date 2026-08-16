@@ -1,45 +1,45 @@
 # Checklist
 
-Anyone with the link can view this. Checking a box (or adding new lines) needs write access on this repo — ask Luigi to add you as a collaborator, or just tell him what to check off.
+Chiunque abbia il link può vedere questa pagina. Per spuntare o aggiungere righe serve accesso in scrittura al repository — chiedi a Luigi di aggiungerti come collaboratore, oppure digli semplicemente cosa spuntare.
 
-## Bookings
-- [ ] Flights booked (Apr 4 13:15 arrival · Apr 9 12:30 departure)
-- [ ] Longyearbyen hotel booked, all 5 nights
-- [ ] Coal mine tour booked (Apr 5 morning — needs a real buffer before the afternoon snowmobile pickup)
-- [ ] 1-Night East Coast Adventure booked ([wildlife.no](https://www.wildlife.no/en/product-page/snowmobile-safari-to-east-coast-one-night), NOK 13,900pp, Apr 5–6, min group 3)
-- [ ] Ice Cave Hike – Frozen World booked ([wildlife.no](https://www.wildlife.no/en/product-page/ice-cave-hike-frozen-world), NOK 1,310pp, Apr 7 09:30–~15:00)
-- [ ] Apr 8 plan decided (currently: free / TBD)
+## Prenotazioni
+- [ ] Volo prenotato (arrivo 4 apr 13:15 · partenza 9 apr 12:30)
+- [ ] Hotel a Longyearbyen prenotato, tutte le 5 notti
+- [ ] Visita alla miniera prenotata (mattina del 5 apr — margine prima del ritiro delle 17:00)
+- [ ] Spedizione Costa Est prenotata (1 notte, [wildlife.no](https://www.wildlife.no/en/product-page/snowmobile-safari-to-east-coast-one-night), ~€1.200, 5–6 apr)
+- [ ] Grotta di ghiaccio – Frozen World prenotata ([wildlife.no](https://www.wildlife.no/en/product-page/ice-cave-hike-frozen-world), ~€115, 7 apr 09:30–~15:00)
+- [ ] Piano per l'8 aprile deciso (per ora: libero / da decidere)
 
-## Insurance
-- [ ] Travel insurance purchased (covers trip cancellation/interruption)
-- [ ] Confirmed policy covers snowmobiling / adventure sports
-- [ ] Medical & emergency evacuation coverage confirmed
-- [ ] Understand the East Coast trip's own S&R insurance only covers that trip, not general medical
-- [ ] Snowmobile damage excess checked (NOK 10,000 deductible)
+## Assicurazione
+- [ ] Assicurazione di viaggio acquistata (copre cancellazione/interruzione del viaggio)
+- [ ] Confermato che copre motoslitta / sport avventura
+- [ ] Confermata copertura medica ed evacuazione d'emergenza
+- [ ] Chiaro che l'assicurazione S&R inclusa nella spedizione copre solo quella gita, non spese mediche generali
+- [ ] Verificata la franchigia danni motoslitta (~€870)
 
-## Clothing & Gear
-Provided by operators:
-- [ ] Snowmobile suit, boots, mittens, helmet, goggles, balaclava (East Coast trip)
-- [ ] Snowshoes, helmet, headlamp, crampons (Ice Cave hike)
+## Vestiario e attrezzatura
+Forniti dagli operatori:
+- [ ] Tuta da motoslitta, stivali, muffole, casco, occhiali, passamontagna (spedizione Costa Est)
+- [ ] Ciaspole, casco, torcia frontale, ramponi (grotta di ghiaccio)
 
-Bring yourselves:
-- [ ] Wool base layers, top + bottom (2 sets each)
-- [ ] Wool socks, several pairs each
-- [ ] Mid-layer fleece/wool jumper
-- [ ] Warm hat + neck warmer/buff
-- [ ] Sunglasses or ski goggles (snow glare is intense)
-- [ ] Sunscreen + SPF lip balm
-- [ ] Own warm winter boots (mine, ice cave walk, town)
-- [ ] Casual clothes for evenings
-- [ ] Headlamp + spare batteries
-- [ ] Power bank (cold drains batteries fast)
+Da portare voi:
+- [ ] Intimo termico in lana, sopra + sotto (2 set a testa)
+- [ ] Calze di lana, diversi paia a testa
+- [ ] Strato intermedio in pile/lana
+- [ ] Berretto caldo + scaldacollo
+- [ ] Occhiali da sole o maschera da sci (il riflesso della neve è molto intenso)
+- [ ] Crema solare + burrocacao con SPF
+- [ ] Scarponi invernali propri (miniera, camminata alla grotta, città)
+- [ ] Vestiti casual per le sere
+- [ ] Torcia frontale + batterie di scorta
+- [ ] Power bank (il freddo scarica le batterie in fretta)
 
-## Phone & Connectivity
-- [ ] Checked with carrier about Svalbard specifically (EU roaming does NOT apply — outside EU/EEA)
-- [ ] Decided: physical Telenor SIM or Telenor-network eSIM (only network on Svalbard)
-- [ ] Accepted there's no signal on the East Coast expedition
+## Telefono e connettività
+- [ ] Verificato con l'operatore telefonico per Svalbard nello specifico (il roaming UE NON si applica — fuori da UE/SEE)
+- [ ] Deciso: SIM fisica Telenor o eSIM sulla rete Telenor (unica rete a Svalbard)
+- [ ] Chiaro che non c'è segnale durante la spedizione Costa Est
 
-## Documents
-- [ ] Passport/ID valid
-- [ ] Physical driving licence (car/motorcycle/snowmobile) — each of you, digital not accepted
-- [ ] Insurance documents saved offline (screenshot/PDF)
+## Documenti
+- [ ] Passaporto/carta d'identità valida
+- [ ] Patente fisica (auto/moto/motoslitta) — a testa, quelle digitali non sono accettate
+- [ ] Documenti assicurativi salvati offline (screenshot/PDF)
