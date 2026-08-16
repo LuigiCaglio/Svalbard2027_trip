@@ -3,7 +3,7 @@
 Anyone with the link can view this. Checking a box (or adding new lines) needs write access on this repo — ask Luigi to add you as a collaborator, or just tell him what to check off.
 
 ## Bookings
-- [ ] Flights booked (Apr 4 13:15 arrival · Apr 9 12:30 departure)
+- [x] Flights booked (Apr 4 13:15 arrival · Apr 9 12:30 departure)
 - [ ] Longyearbyen hotel booked, all 5 nights
 - [ ] Coal mine tour booked (Apr 5 morning — needs a real buffer before the afternoon snowmobile pickup)
 - [ ] 1-Night East Coast Adventure booked ([wildlife.no](https://www.wildlife.no/en/product-page/snowmobile-safari-to-east-coast-one-night), NOK 13,900pp, Apr 5–6, min group 3)
