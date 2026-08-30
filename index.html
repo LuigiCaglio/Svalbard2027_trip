@@ -597,6 +597,15 @@
     }
   }
 
+  function isSafeHref(url) {
+    try {
+      var u = new URL(url, location.href);
+      return u.protocol === 'http:' || u.protocol === 'https:';
+    } catch (e) {
+      return false;
+    }
+  }
+
   function mdInline(text) {
     // minimal markdown: [label](url) and escape the rest
     var span = document.createElement('span');
@@ -604,9 +613,13 @@
     var last = 0, m, frag = document.createDocumentFragment();
     while ((m = re.exec(text))) {
       if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
-      var a = document.createElement('a');
-      a.href = m[2]; a.target = '_blank'; a.rel = 'noopener'; a.textContent = m[1];
-      frag.appendChild(a);
+      if (isSafeHref(m[2])) {
+        var a = document.createElement('a');
+        a.href = m[2]; a.target = '_blank'; a.rel = 'noopener'; a.textContent = m[1];
+        frag.appendChild(a);
+      } else {
+        frag.appendChild(document.createTextNode(m[1]));
+      }
       last = re.lastIndex;
     }
     if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
@@ -1118,7 +1131,7 @@
         } else {
           items.forEach(function (item) {
             var li = document.createElement('li');
-            if (item.link) {
+            if (item.link && isSafeHref(item.link)) {
               var a = document.createElement('a');
               a.href = item.link; a.target = '_blank'; a.rel = 'noopener'; a.textContent = item.name;
               li.appendChild(a);
@@ -1142,10 +1155,12 @@
           var tdName = document.createElement('td');
           tdName.textContent = item.name;
           var tdLink = document.createElement('td');
-          if (item.link) {
+          if (item.link && isSafeHref(item.link)) {
             var a = document.createElement('a');
             a.className = 'trunc-link'; a.href = item.link; a.target = '_blank'; a.rel = 'noopener'; a.textContent = item.link;
             tdLink.appendChild(a);
+          } else if (item.link) {
+            tdLink.textContent = item.link;
           }
           var tdNote = document.createElement('td');
           tdNote.textContent = item.note || '';
