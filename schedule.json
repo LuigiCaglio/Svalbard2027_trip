@@ -1,0 +1,52 @@
+[
+  {
+    "id": "hotel",
+    "label": "Hotel",
+    "style": "tl-bg",
+    "startDate": "2027-04-04",
+    "startTime": "13:15",
+    "endDate": "2027-04-09",
+    "endTime": "12:30",
+    "notes": "Stesso hotel a Longyearbyen, tutte le 5 notti"
+  },
+  {
+    "id": "miniera",
+    "label": "Miniera",
+    "style": "tl-ice",
+    "startDate": "2027-04-05",
+    "startTime": "09:00",
+    "endDate": "2027-04-05",
+    "endTime": "12:00",
+    "notes": "Visita alla miniera di carbone — orario approssimativo, non ancora prenotata"
+  },
+  {
+    "id": "slitta",
+    "label": "Slitta malata",
+    "style": "tl-accent",
+    "startDate": "2027-04-05",
+    "startTime": "17:00",
+    "endDate": "2027-04-06",
+    "endTime": "18:00",
+    "notes": "Spedizione Costa Est, 1 notte (motoslitta)"
+  },
+  {
+    "id": "grotta",
+    "label": "Grotta",
+    "style": "tl-ice",
+    "startDate": "2027-04-07",
+    "startTime": "09:30",
+    "endDate": "2027-04-07",
+    "endTime": "15:00",
+    "notes": "Grotta di ghiaccio – Frozen World"
+  },
+  {
+    "id": "libero",
+    "label": "Libero",
+    "style": "tl-tbd",
+    "startDate": "2027-04-08",
+    "startTime": "08:00",
+    "endDate": "2027-04-08",
+    "endTime": "18:00",
+    "notes": "https://www.wildlife.no/en/product-page/frozen-hike-trollsteinen-ice-cave"
+  }
+]
