@@ -23,11 +23,11 @@
     "id": "slitta",
     "label": "Slitta malata",
     "style": "tl-accent",
-    "startDate": "2027-04-05",
-    "startTime": "17:00",
+    "startDate": "2027-04-06",
+    "startTime": "09:00",
     "endDate": "2027-04-06",
-    "endTime": "18:00",
-    "notes": "Spedizione Costa Est, 1 notte (motoslitta)"
+    "endTime": "12:00",
+    "notes": "Miniera "
   },
   {
     "id": "grotta",
