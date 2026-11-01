@@ -10,7 +10,7 @@ Chiunque abbia il link può vedere questa pagina. Per spuntare o aggiungere righ
 - [ ] Grotta di ghiaccio – Frozen World prenotata ([wildlife.no](https://www.wildlife.no/en/product-page/ice-cave-hike-frozen-world), ~€115, 7 apr 09:30–~15:00)
 - [ ] Piano per l'8 aprile deciso (per ora: libero / da decidere)
 - [x] Miniera per 6 aprile mattina
-- [ ] Slitta cani 6 aprile dalle 15:00
+- [x] Slitta cani 6 aprile dalle 15:00
 
 ## Vestiario e attrezzatura
 
