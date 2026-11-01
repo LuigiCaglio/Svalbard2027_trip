@@ -9,6 +9,7 @@ Chiunque abbia il link può vedere questa pagina. Per spuntare o aggiungere righ
 - [ ] Spedizione Costa Est prenotata (1 notte, [wildlife.no](https://www.wildlife.no/en/product-page/snowmobile-safari-to-east-coast-one-night), ~€1.200, 5–6 apr)
 - [ ] Grotta di ghiaccio – Frozen World prenotata ([wildlife.no](https://www.wildlife.no/en/product-page/ice-cave-hike-frozen-world), ~€115, 7 apr 09:30–~15:00)
 - [ ] Piano per l'8 aprile deciso (per ora: libero / da decidere)
+- [ ] Miniera per 6 aprile mattina
 
 ## Vestiario e attrezzatura
 
